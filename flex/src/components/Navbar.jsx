@@ -79,8 +79,8 @@ export default function Navbar() {
   };
 
   return (
-    <header className="w-full bg-black shadow-sm">
-      <nav className="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
+    <header className="w-full bg-black shadow-xl shadow-secondary">
+      <nav className="max-w-11/12 mx-auto px-8 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/">
           <div className="cursor-pointer">
@@ -96,7 +96,7 @@ export default function Navbar() {
         {/* Center Arc Menu */}
         <div
           ref={menuRef}
-          className="relative flex items-center justify-center"
+          className="relative flex items-center justify-center w-100"
           onMouseEnter={handleEnter}
           onMouseLeave={handleLeave}
         >
