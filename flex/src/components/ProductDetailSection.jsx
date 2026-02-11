@@ -1,6 +1,7 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 
@@ -30,8 +31,7 @@ const ProductDetailSection = () => {
   const textRef = useRef(null);
   const scrollSectionRef = useRef(null);
 
-  useEffect(() => {
-    let ctx = gsap.context(() => {
+  useGSAP(() => {
       
       // --- Hero Parallax ---
       gsap.to(textRef.current, {
@@ -82,10 +82,7 @@ const ProductDetailSection = () => {
         });
       });
 
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
+  }, { scope: containerRef });
 
   return (
     <div ref={containerRef} className="bg-primary text-base-content font-sans overflow-hidden selection:bg-secondary selection:text-primary-content">
@@ -177,12 +174,12 @@ const ProductDetailSection = () => {
         EDITORIAL / STORY SECTION
         ================================================================
       */}
-      <section className="relative z-10 py-32 px-6 md:px-20 max-w-7xl mx-auto border-t border-base-content/5">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
+      <section className="relative z-10 py-15 px-6 md:px-20 max-w-7xl mx-auto border-t border-base-content/5">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-8">
-                <h2 className="text-4xl md:text-7xl font-extralight leading-tight mb-8 text-base-content">
-                    Designed for the <span className="text-secondary italic font-medium">relentless</span>. <br/>
-                    Engineered for <span className="font-bold text-base-content">perfection</span>.
+                <h2 className="text-4xl md:text-6xl font-extralight leading-tight mb-8 text-base-content">
+                    Designed for the <br /> <span className="text-secondary italic font-medium">relentless</span>. <br/>
+                    Engineered for <br /> <span className="font-bold text-base-content">perfection</span>.
                 </h2>
             </div>
             <div className="lg:col-span-4">
@@ -224,7 +221,7 @@ const ProductDetailSection = () => {
                             <span className="text-secondary font-mono text-xl">0{i+1}</span>
                             <div className="h-px w-12 bg-base-content/20"></div>
                         </div>
-                        <h3 className="anim-text text-5xl md:text-7xl font-bold mb-2 tracking-tight text-neutral-content">
+                        <h3 className="anim-text text-5xl md:text-6xl font-bold mb-2 tracking-tight text-neutral-content">
                             {item.title}
                         </h3>
                         <h4 className="anim-text text-xl md:text-2xl font-light text-neutral-content/50 mb-8 uppercase tracking-widest">
