@@ -1,9 +1,9 @@
-import Image from "next/image";
+import ProductDetailSection from "@/components/ProductDetailSection";
 
 export default function Home() {
   return (
-    <div className="">
-      
-    </div>
+    <main>
+      <ProductDetailSection />
+    </main>
   );
 }
