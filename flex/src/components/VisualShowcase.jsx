@@ -19,22 +19,22 @@ gsap.registerPlugin(ScrollTrigger);
 
 const variants = [
   {
-    src: "https://i.ibb.co/8DxnQm7v/Flex-black-1.png",
+    src: "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882424/Flex_black_1_y5fi9i.png",
     name: "Obsidian",
     color: "#1a1a1a",
   },
   {
-    src: "https://i.ibb.co/Zz80YwQW/Flex-blue.png",
+    src: "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882424/Flex_blue_f16qpn.png",
     name: "Pacific",
     color: "#2563eb",
   },
   {
-    src: "https://i.ibb.co/F4SN2gMH/Flex-red.png",
+    src: "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882424/Flex_red_hhethd.png",
     name: "Ember",
     color: "#740A03",
   },
   {
-    src: "https://i.ibb.co/RpdPWHYJ/flex-white.png",
+    src: "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882422/flex_white_djnry7.png",
     name: "Arctic",
     color: "#e5e5e5",
   },
@@ -74,11 +74,11 @@ export default function VisualShowcase() {
       y: 40,
       opacity: 0,
       duration: 0.8,
-      stagger: 0.2,
+      
       scrollTrigger: {
         trigger: ".material-section",
-        start: "top 70%",
-        toggleActions: "play none none reverse",
+        start: "top 85%",
+        toggleActions: "play none none none",
       },
     });
   }, { scope: containerRef });
@@ -91,7 +91,7 @@ export default function VisualShowcase() {
         EDITORIAL INTRO — "The Collection"
         ================================================================
       */}
-      <section className="relative py-10 px-6 md:px-20 max-w-7xl mx-auto border-t border-base-content/5">
+      <section className="relative py-10 max-w-7xl mx-auto border-t border-base-content/5">
         <div className="showcase-heading grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
           <div className="lg:col-span-7">
             <div className="flex items-center gap-4 mb-8">
@@ -191,49 +191,66 @@ export default function VisualShowcase() {
         MATERIAL / CRAFT — Grid Section  
         ================================================================
       */}
-      <section className="material-section relative py-32 px-6 md:px-20 max-w-7xl mx-auto border-t border-base-content/5">
+      <section className="material-section relative py-32 px-6 md:px-20 max-w-7xl mx-auto border-t border-white/10">
         <div className="flex items-center gap-4 mb-16">
           <span className="text-secondary font-mono text-xl">05</span>
-          <div className="h-px w-12 bg-base-content/20"></div>
-          <span className="text-sm uppercase tracking-widest text-base-content/40">Material & Craft</span>
+          <div className="h-px w-12 bg-white/20"></div>
+          <span className="text-sm uppercase tracking-widest text-white/50">Material & Craft</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-          {/* Card 1 */}
-          <div className="material-item group p-8 border border-base-content/5 rounded-2xl hover:border-secondary/30 transition-all duration-500 hover:bg-base-content/[0.02]">
-            <HiBolt className="text-4xl text-secondary mb-6" />
-            <h3 className="text-2xl font-bold text-base-content mb-3 tracking-tight">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+
+          {/* Card 1 — 18/8 Stainless */}
+          <div className="material-item group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-white/[0.02] p-8 hover:border-secondary/40 transition-all duration-500">
+            {/* Top accent line */}
+            <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-secondary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            {/* Number badge */}
+            <span className="text-xs font-mono text-white/20 mb-6 block">01</span>
+            {/* Icon */}
+            <div className="w-16 h-16 rounded-2xl bg-secondary/15 border border-secondary/20 flex items-center justify-center mb-6 group-hover:bg-secondary/25 group-hover:border-secondary/40 group-hover:shadow-[0_0_25px_rgba(116,10,3,0.3)] transition-all duration-500">
+              <HiBolt className="text-3xl text-red-400 group-hover:text-red-300 transition-colors duration-300" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2 tracking-tight">
               18/8 Stainless
             </h3>
-            <p className="text-base-content/50 leading-relaxed">
+            <p className="text-sm text-gray-400 leading-relaxed">
               Medical-grade steel that resists corrosion and preserves pure flavor. No metallic aftertaste, ever.
             </p>
-            <div className="h-0.5 w-0 bg-secondary mt-6 group-hover:w-12 transition-all duration-500"></div>
+            <div className="h-[2px] w-0 bg-gradient-to-r from-secondary to-red-400 mt-6 group-hover:w-16 transition-all duration-500"></div>
           </div>
 
-          {/* Card 2 */}
-          <div className="material-item group p-8 border border-base-content/5 rounded-2xl hover:border-secondary/30 transition-all duration-500 hover:bg-base-content/[0.02]">
-            <HiPaintBrush className="text-4xl text-secondary mb-6" />
-            <h3 className="text-2xl font-bold text-base-content mb-3 tracking-tight">
+          {/* Card 2 — SureGrip™ Coat */}
+          <div className="material-item group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-white/[0.02] p-8 hover:border-secondary/40 transition-all duration-500">
+            <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-secondary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <span className="text-xs font-mono text-white/20 mb-6 block">02</span>
+            <div className="w-16 h-16 rounded-2xl bg-secondary/15 border border-secondary/20 flex items-center justify-center mb-6 group-hover:bg-secondary/25 group-hover:border-secondary/40 group-hover:shadow-[0_0_25px_rgba(116,10,3,0.3)] transition-all duration-500">
+              <HiPaintBrush className="text-3xl text-red-400 group-hover:text-red-300 transition-colors duration-300" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2 tracking-tight">
               SureGrip™ Coat
             </h3>
-            <p className="text-base-content/50 leading-relaxed">
+            <p className="text-sm text-gray-400 leading-relaxed">
               Proprietary powder coat that is sweat-free, slip-resistant, and scratch-proof. Looks new for years.
             </p>
-            <div className="h-0.5 w-0 bg-secondary mt-6 group-hover:w-12 transition-all duration-500"></div>
+            <div className="h-[2px] w-0 bg-gradient-to-r from-secondary to-red-400 mt-6 group-hover:w-16 transition-all duration-500"></div>
           </div>
 
-          {/* Card 3 */}
-          <div className="material-item group p-8 border border-base-content/5 rounded-2xl hover:border-secondary/30 transition-all duration-500 hover:bg-base-content/[0.02]">
-            <FaSnowflake className="text-4xl text-secondary mb-6" />
-            <h3 className="text-2xl font-bold text-base-content mb-3 tracking-tight">
+          {/* Card 3 — Vacuum Core */}
+          <div className="material-item group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-white/[0.02] p-8 hover:border-secondary/40 transition-all duration-500">
+            <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-secondary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <span className="text-xs font-mono text-white/20 mb-6 block">03</span>
+            <div className="w-16 h-16 rounded-2xl bg-secondary/15 border border-secondary/20 flex items-center justify-center mb-6 group-hover:bg-secondary/25 group-hover:border-secondary/40 group-hover:shadow-[0_0_25px_rgba(116,10,3,0.3)] transition-all duration-500">
+              <FaSnowflake className="text-3xl text-red-400 group-hover:text-red-300 transition-colors duration-300" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2 tracking-tight">
               Vacuum Core
             </h3>
-            <p className="text-base-content/50 leading-relaxed">
+            <p className="text-sm text-gray-400 leading-relaxed">
               Double-wall vacuum insulation locks temperature in. 12 hours hot. 24 hours cold. No compromise.
             </p>
-            <div className="h-0.5 w-0 bg-secondary mt-6 group-hover:w-12 transition-all duration-500"></div>
+            <div className="h-[2px] w-0 bg-gradient-to-r from-secondary to-red-400 mt-6 group-hover:w-16 transition-all duration-500"></div>
           </div>
+
         </div>
       </section>
     </div>

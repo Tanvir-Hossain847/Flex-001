@@ -1,16 +1,28 @@
 {
   "images": [
+    // black bottle
     "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882424/Flex_black_1_y5fi9i.png",
+    //red bottle
     "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882424/Flex_red_hhethd.png",
+    // blue bottle
     "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882424/Flex_blue_f16qpn.png",
+    // image 1
     "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882423/image_1_ircwqt.jpg",
+    // transparent model
     "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882423/Transparent-Model_z7lplb.png",
+    // white bottle
     "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882422/flex_white_djnry7.png",
+    // image 2
     "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882423/image2_kjzqa6.jpg",
+    // image 4
     "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882423/image4_b3zxl9.jpg",
+    // image 3
     "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882422/image3_mmczl1.jpg",
+    // image 5
     "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882423/image5_guepg7.jpg",
+    // image 6
     "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882422/image6_pao3qx.jpg",
+    // logo
     "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770826040/transperent_logo_fskhub.png"
   ]
 }

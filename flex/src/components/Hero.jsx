@@ -5,10 +5,10 @@ import gsap from "gsap";
 import Image from "next/image";
 
 const images = [
-  "https://i.ibb.co.com/C514szD6/Flex-black-1.png",
-  "https://i.ibb.co.com/MyRsq2Nb/Flex-blue.png",
-  "https://i.ibb.co.com/W4yqtcsG/Flex-red.png",
-  "https://i.ibb.co.com/CsVr0Wy7/flex-white.png",
+  "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882424/Flex_black_1_y5fi9i.png",
+  "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882424/Flex_blue_f16qpn.png",
+  "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882424/Flex_red_hhethd.png",
+  "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882422/flex_white_djnry7.png",
 ];
 
 const descriptions = [
