@@ -169,7 +169,7 @@ export default function Hero() {
     <section
       ref={heroRef}
       onMouseMove={handleMouseMove}
-      className={`relative w-full max-w-7xl mx-auto min-h-[85vh] md:min-h-[80vh] flex flex-col items-center justify-center overflow-hidden rounded-[2.5rem] shadow-2xl transition-colors duration-700 ease-in-out border ${borderColor} mt-4 mb-4`}
+      className={`relative w-full z-0  min-h-[85vh] md:min-h-[80vh] flex flex-col items-center justify-center overflow-hidden  shadow-2xl transition-colors duration-700 ease-in-out border ${borderColor}  `}
       style={{
         background: `radial-gradient(circle at center, ${active.color}dd 0%, ${active.color} 40%, #000000 100%)`,
       }}
