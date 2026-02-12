@@ -13,7 +13,6 @@ export default function Home() {
       <ProductDetailSection />
       <VisualShowcase />
       <ReviewsSection />
-      <Footer />
     </main>
   );
 }
