@@ -112,7 +112,7 @@ const ProductDetailSection = () => {
 
              <div className="relative lg:w-250 transition-transform duration-500 hover:scale-[1.02]">
                 <Image 
-                    src="https://i.ibb.co.com/7tJYwqLD/Transparent-Model.png" 
+                    src="https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882423/Transparent-Model_z7lplb.png" 
                     alt="Flex Thermos" 
                     width={800} 
                     height={1600} 
@@ -202,9 +202,9 @@ const ProductDetailSection = () => {
         <div className="sticky-image hidden md:flex w-1/2 h-screen sticky top-0 items-center justify-center overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-base-content/5 to-transparent"></div>
             
-            <div className="relative w-210 h-110">
+            <div className="relative w-70 h-70">
                  <Image 
-                  src="https://i.ibb.co.com/7tJYwqLD/Transparent-Model.png" 
+                  src="https://res.cloudinary.com/do3iu9q7d/image/upload/v1770826040/transperent_logo_fskhub.png" 
                   alt="Thermos Detail" 
                   fill
                   className="drop-shadow-2xl"
