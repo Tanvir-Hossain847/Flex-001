@@ -139,21 +139,21 @@ export default function AboutUs() {
       <section className="stats-section py-32 bg-[#0d0d0d] text-center">
         <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-16">
           <div className="stat">
-            <h3 className="text-7xl font-black text-red-500">24H</h3>
+            <h3 className="text-5xl font-black text-red-500">24H</h3>
             <p className="mt-4 text-gray-400 uppercase tracking-widest">
               Cold Retention
             </p>
           </div>
 
           <div className="stat">
-            <h3 className="text-7xl font-black text-red-500">12H</h3>
+            <h3 className="text-5xl font-black text-red-500">12H</h3>
             <p className="mt-4 text-gray-400 uppercase tracking-widest">
               Heat Lock
             </p>
           </div>
 
           <div className="stat">
-            <h3 className="text-7xl font-black text-red-500">100%</h3>
+            <h3 className="text-5xl font-black text-red-500">100%</h3>
             <p className="mt-4 text-gray-400 uppercase tracking-widest">
               BPA Free Steel
             </p>

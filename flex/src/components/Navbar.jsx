@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import Image from "next/image";
 import { useRef, useState, useEffect, useCallback } from "react";
@@ -96,7 +95,7 @@ export default function Navbar() {
           : "bg-black"
       }`}
     >
-      <nav className="max-w-11/12 mx-auto px-8 py-4 flex items-center justify-between">
+      <nav className="max-w-7xl mx-auto py-4 px-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" aria-label="Home">
           <div className="cursor-pointer transition-transform duration-200 hover:scale-105">
@@ -113,7 +112,7 @@ export default function Navbar() {
         {/* Center Arc Menu */}
         <div
           ref={menuRef}
-          className="relative flex items-center justify-center w-100 py-4"
+          className="relative flex items-center justify-center w-100 pl-30 py-4"
           onMouseEnter={handleEnter}
           onMouseLeave={handleLeave}
         >
@@ -150,12 +149,20 @@ export default function Navbar() {
         </div>
 
         {/* CTA */}
-        <Link
-          href="/signup"
-          className="bg-[#CF0F47] text-white px-6 py-2 rounded-lg hover:bg-[#FF0B55] hover:shadow-[0_0_20px_rgba(255,11,85,0.3)] active:scale-95 transition-all duration-200"
-        >
-          Start Now
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link
+            href="/login"
+            className="text-white px-4 py-2 text-sm font-medium hover:text-secondary transition-colors"
+          >
+            Log In
+          </Link>
+          <Link
+            href="/register"
+            className="bg-secondary text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-[#FF0B55] hover:shadow-[0_0_20px_rgba(255,11,85,0.3)] active:scale-95 transition-all duration-200"
+          >
+            Register
+          </Link>
+        </div>
       </nav>
     </header>
   );
