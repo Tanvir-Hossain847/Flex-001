@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { BsXDiamond } from "react-icons/bs";
@@ -13,12 +13,22 @@ const navLinks = [
   { label: "Products", href: "/products" },
   { label: "Support", href: "/support" },
   { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export default function Navbar() {
   const menuRef = useRef(null);
   const itemsRef = useRef([]);
   const iconRef = useRef(null);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Scroll-aware background
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    onScroll(); // initial check
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useGSAP(
     () => {
@@ -32,23 +42,23 @@ export default function Navbar() {
     { scope: menuRef }
   );
 
-  const handleEnter = () => {
+  const handleEnter = useCallback(() => {
     // Enlarge icon
     gsap.to(iconRef.current, { scale: 1.5, duration: 0.3, ease: "power3.out" });
 
-    const radius = 90; 
+    const radius = 90;
     const total = navLinks.length;
 
     gsap.killTweensOf(itemsRef.current);
 
     // Spread links over a larger arc to prevent overlap
-    const arcSpread = Math.PI / 1.5; // 90 degrees
-    const startAngle = Math.PI / 2 - arcSpread / 2; // center arc above icon
+    const arcSpread = Math.PI / 1; // wider arc for 4 items
+    const startAngle = Math.PI / 2 - arcSpread / 2;
 
     itemsRef.current.forEach((el, index) => {
       const angle = startAngle + (index / (total - 1)) * arcSpread;
       const x = Math.cos(angle) * radius;
-      const y = Math.sin(angle) * radius; 
+      const y = Math.sin(angle) * radius;
 
       gsap.to(el, {
         x,
@@ -60,9 +70,9 @@ export default function Navbar() {
         overwrite: "auto",
       });
     });
-  };
+  }, []);
 
-  const handleLeave = () => {
+  const handleLeave = useCallback(() => {
     // Shrink icon back
     gsap.to(iconRef.current, { scale: 1, duration: 0.3, ease: "power3.inOut" });
 
@@ -76,19 +86,26 @@ export default function Navbar() {
       ease: "power3.inOut",
       overwrite: "auto",
     });
-  };
+  }, []);
 
   return (
-    <header className="w-full bg-black shadow-xl shadow-secondary">
+    <header
+      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+        scrolled
+          ? "bg-black/95 backdrop-blur-md shadow-xl shadow-secondary"
+          : "bg-black"
+      }`}
+    >
       <nav className="max-w-11/12 mx-auto px-8 py-4 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/">
-          <div className="cursor-pointer">
+        <Link href="/" aria-label="Home">
+          <div className="cursor-pointer transition-transform duration-200 hover:scale-105">
             <Image
               src="https://res.cloudinary.com/do3iu9q7d/image/upload/v1770826040/transperent_logo_fskhub.png"
               alt="Logo"
               width={60}
               height={60}
+              priority
             />
           </div>
         </Link>
@@ -96,13 +113,21 @@ export default function Navbar() {
         {/* Center Arc Menu */}
         <div
           ref={menuRef}
-          className="relative flex items-center justify-center w-100"
+          className="relative flex items-center justify-center w-100 py-4"
           onMouseEnter={handleEnter}
           onMouseLeave={handleLeave}
         >
           {/* Icon */}
-          <div ref={iconRef} className="cursor-pointer z-10">
-            <BsXDiamond size={25} className="text-white" />
+          <div
+            ref={iconRef}
+            className="cursor-pointer z-10 will-change-transform"
+            role="button"
+            aria-label="Navigation menu"
+            tabIndex={0}
+            onFocus={handleEnter}
+            onBlur={handleLeave}
+          >
+            <BsXDiamond size={25} className="text-white transition-colors duration-200" />
           </div>
 
           {/* Arc Links */}
@@ -111,11 +136,11 @@ export default function Navbar() {
               <li
                 key={link.label}
                 ref={(el) => (itemsRef.current[index] = el)}
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 will-change-transform"
               >
                 <Link
                   href={link.href}
-                  className="px-4 py-2 bg-white shadow-lg rounded-full text-sm text-black font-medium hover:bg-[#FF0B55] hover:text-white transition"
+                  className="px-4 py-2 bg-white shadow-lg rounded-full text-sm text-black font-medium hover:bg-secondary hover:text-white hover:scale-110 hover:shadow-[0_0_20px_rgba(255,11,85,0.4)] transition-all duration-200 inline-block"
                 >
                   {link.label}
                 </Link>
@@ -127,7 +152,7 @@ export default function Navbar() {
         {/* CTA */}
         <Link
           href="/signup"
-          className="bg-[#CF0F47] text-white px-6 py-2 rounded-lg hover:bg-[#FF0B55] transition"
+          className="bg-[#CF0F47] text-white px-6 py-2 rounded-lg hover:bg-[#FF0B55] hover:shadow-[0_0_20px_rgba(255,11,85,0.3)] active:scale-95 transition-all duration-200"
         >
           Start Now
         </Link>
