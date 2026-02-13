@@ -35,12 +35,16 @@ export const AuthProvider = ({ children }) => {
       });
 
       // Sync with database
-      await axios.post("/api/users", {
-        uid: user.uid,
-        email: user.email,
-        displayName: name,
-        photoURL: photoURL || "https://i.ibb.co/MgsTCcv/avater.jpg",
-      });
+      try {
+        await axios.post("/api/users", {
+          uid: user.uid,
+          email: user.email,
+          displayName: name,
+          photoURL: photoURL || "https://i.ibb.co/MgsTCcv/avater.jpg",
+        });
+      } catch (axiosError) {
+        console.error("Failed to sync user with database:", axiosError);
+      }
 
       return userCredential;
     } catch (error) {
@@ -61,14 +65,17 @@ export const AuthProvider = ({ children }) => {
       const user = result.user;
 
       // Sync with database
-      // Using post/put strategies to handle existing users might be better, 
-      // but strictly following instructions to post user data upon registration/login
-      await axios.post("/api/users", {
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-      });
+      try {
+        await axios.post("/api/users", {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+        });
+      } catch (axiosError) {
+        console.error("Failed to sync user with database:", axiosError);
+        // Continue login flow even if database sync fails context
+      }
 
       return result;
     } catch (error) {

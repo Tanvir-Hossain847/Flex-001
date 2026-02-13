@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import Image from "next/image";
@@ -11,6 +12,10 @@ export default function LoginPage() {
   const container = useRef(null);
   const formRef = useRef(null);
   const router = useRouter();
+  const { loginUser, googleLogin } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   // 🎬 Entrance Animation (different from register)
   useGSAP(() => {
@@ -24,9 +29,30 @@ export default function LoginPage() {
   }, []);
 
   // 🚀 Submit Animation + Redirect
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
 
+    try {
+      await loginUser(email, password);
+      animateAndRedirect();
+    } catch (err) {
+      setError("Failed to login. Please check your credentials.");
+      console.error(err);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await googleLogin();
+      animateAndRedirect();
+    } catch (err) {
+      setError("Failed to login with Google.");
+      console.error(err);
+    }
+  };
+
+  const animateAndRedirect = () => {
     gsap.to(container.current, {
       opacity: 0,
       y: -40,
@@ -90,17 +116,22 @@ export default function LoginPage() {
               Access your FLEX account
             </p>
 
+            {error && <div className="alert alert-error mb-4"><span>{error}</span></div>}
+
             <form className="space-y-5" onSubmit={handleLogin}>
               {/* Email */}
               <div>
                 <label className="label">
                   <span className="label-text">Email</span>
                 </label>
-                <input
-                  type="email"
-                  placeholder="you@example.com"
-                  className="input input-bordered w-full focus:border-secondary"
-                />
+                  <input
+                    type="email"
+                    placeholder="you@example.com"
+                    className="input input-bordered w-full focus:border-secondary"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
               </div>
 
               {/* Password */}
@@ -108,11 +139,14 @@ export default function LoginPage() {
                 <label className="label">
                   <span className="label-text">Password</span>
                 </label>
-                <input
-                  type="password"
-                  placeholder="********"
-                  className="input input-bordered w-full focus:border-secondary"
-                />
+                  <input
+                    type="password"
+                    placeholder="********"
+                    className="input input-bordered w-full focus:border-secondary"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
               </div>
 
               {/* Remember & Forgot */}
@@ -137,7 +171,11 @@ export default function LoginPage() {
 
             <div className="divider my-6">or</div>
 
-            <button className="btn btn-outline w-full">
+            <button 
+              className="btn btn-outline w-full"
+              type="button"
+              onClick={handleGoogleLogin}
+            >
               Continue with Google
             </button>
 
