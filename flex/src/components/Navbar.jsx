@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRef, useState, useEffect, useCallback } from "react";
+import { useAuth } from "@/context/AuthContext";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { BsXDiamond } from "react-icons/bs";
@@ -16,6 +17,7 @@ const navLinks = [
 ];
 
 export default function Navbar() {
+  const { user, logout } = useAuth();
   const menuRef = useRef(null);
   const itemsRef = useRef([]);
   const iconRef = useRef(null);
@@ -150,18 +152,41 @@ export default function Navbar() {
 
         {/* CTA */}
         <div className="flex items-center gap-4">
-          <Link
-            href="/login"
-            className="text-white px-4 py-2 text-sm font-medium hover:text-secondary transition-colors"
-          >
-            Log In
-          </Link>
-          <Link
-            href="/register"
-            className="bg-secondary text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-[#FF0B55] hover:shadow-[0_0_20px_rgba(255,11,85,0.3)] active:scale-95 transition-all duration-200"
-          >
-            Register
-          </Link>
+          {!user ? (
+            <>
+              <Link
+                href="/login"
+                className="text-white px-4 py-2 text-sm font-medium hover:text-secondary transition-colors"
+              >
+                Log In
+              </Link>
+              <Link
+                href="/register"
+                className="bg-secondary text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-[#FF0B55] hover:shadow-[0_0_20px_rgba(255,11,85,0.3)] active:scale-95 transition-all duration-200"
+              >
+                Register
+              </Link>
+            </>
+          ) : (
+            <div className="flex items-center gap-4">
+              <div className="hidden md:block text-right">
+                <p className="text-white text-sm font-medium">{user.displayName || user.email}</p>
+              </div>
+              {user.photoURL && (
+                <div className="avatar">
+                  <div className="w-10 rounded-full ring ring-secondary ring-offset-base-100 ring-offset-2">
+                    <img src={user.photoURL} alt="avatar" />
+                  </div>
+                </div>
+              )}
+              <button
+                onClick={() => logout()}
+                className="text-white px-4 py-2 text-sm font-medium hover:text-secondary transition-colors"
+              >
+                Logout
+              </button>
+            </div>
+          )}
         </div>
       </nav>
     </header>

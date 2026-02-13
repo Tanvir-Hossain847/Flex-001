@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import Image from "next/image";
@@ -11,6 +12,12 @@ export default function RegisterPage() {
   const container = useRef(null);
   const formRef = useRef(null);
   const router = useRouter();
+  const { createUser, googleLogin } = useAuth();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
 
   // 🎬 Page Load Animation
   useGSAP(() => {
@@ -23,9 +30,34 @@ export default function RegisterPage() {
   }, []);
 
   // 🚀 Submit Animation + Redirect
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
+    if (password !== confirmPassword) {
+      return setError("Passwords do not match");
+    }
+
+    try {
+      await createUser(email, password, name);
+      animateAndRedirect();
+    } catch (err) {
+      setError("Failed to create an account.");
+      console.error(err);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await googleLogin();
+      animateAndRedirect();
+    } catch (err) {
+      setError("Failed to register with Google.");
+      console.error(err);
+    }
+  };
+
+  const animateAndRedirect = () => {
     gsap.to(container.current, {
       opacity: 0,
       scale: 0.95,
@@ -93,49 +125,63 @@ export default function RegisterPage() {
               Register to unlock your experience
             </p>
 
+            {error && <div className="alert alert-error mb-4"><span>{error}</span></div>}
+
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div>
                 <label className="label">
                   <span className="label-text">Full Name</span>
                 </label>
-                <input
-                  type="text"
-                  placeholder="John Doe"
-                  className="input input-bordered w-full focus:border-secondary"
-                />
+                  <input
+                    type="text"
+                    placeholder="John Doe"
+                    className="input input-bordered w-full focus:border-secondary"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
               </div>
 
               <div>
                 <label className="label">
                   <span className="label-text">Email</span>
                 </label>
-                <input
-                  type="email"
-                  placeholder="you@example.com"
-                  className="input input-bordered w-full focus:border-secondary"
-                />
+                  <input
+                    type="email"
+                    placeholder="you@example.com"
+                    className="input input-bordered w-full focus:border-secondary"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
               </div>
 
               <div>
                 <label className="label">
                   <span className="label-text">Password</span>
                 </label>
-                <input
-                  type="password"
-                  placeholder="********"
-                  className="input input-bordered w-full focus:border-secondary"
-                />
+                  <input
+                    type="password"
+                    placeholder="********"
+                    className="input input-bordered w-full focus:border-secondary"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
               </div>
 
               <div>
                 <label className="label">
                   <span className="label-text">Confirm Password</span>
                 </label>
-                <input
-                  type="password"
-                  placeholder="********"
-                  className="input input-bordered w-full focus:border-secondary"
-                />
+                  <input
+                    type="password"
+                    placeholder="********"
+                    className="input input-bordered w-full focus:border-secondary"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
               </div>
 
               {/* 🔥 Success Color Button */}
@@ -149,7 +195,11 @@ export default function RegisterPage() {
 
             <div className="divider my-6">or</div>
 
-            <button className="btn btn-outline w-full">
+            <button 
+              className="btn btn-outline w-full"
+              type="button"
+              onClick={handleGoogleLogin}
+            >
               Register with Google
             </button>
 
