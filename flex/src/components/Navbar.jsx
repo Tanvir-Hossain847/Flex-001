@@ -128,7 +128,10 @@ export default function Navbar() {
             onFocus={handleEnter}
             onBlur={handleLeave}
           >
-            <BsXDiamond size={25} className="text-white transition-colors duration-200" />
+            <BsXDiamond
+              size={25}
+              className="text-white transition-colors duration-200"
+            />
           </div>
 
           {/* Arc Links */}
@@ -170,14 +173,19 @@ export default function Navbar() {
           ) : (
             <div className="flex items-center gap-4">
               <div className="hidden md:block text-right">
-                <p className="text-white text-sm font-medium">{user.displayName || user.email}</p>
+                <p className="text-white text-sm font-medium">
+                  {user.displayName || user.email}
+                </p>
               </div>
               {user.photoURL && (
-                <div className="avatar">
-                  <div className="w-10 rounded-full ring ring-secondary ring-offset-base-100 ring-offset-2">
-                    <img src={user.photoURL} alt="avatar" />
-                  </div>
-                </div>
+                <Link href={"/dashboard"}>
+                  {" "}
+                  <div className="avatar">
+                    <div className="w-10 rounded-full ring ring-secondary ring-offset-base-100 ring-offset-2">
+                      <img src={user.photoURL} alt="avatar" />
+                    </div>
+                  </div>{" "}
+                </Link>
               )}
               <button
                 onClick={() => logout()}

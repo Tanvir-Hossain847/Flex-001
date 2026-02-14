@@ -157,7 +157,7 @@ const ContactPage = () => {
   return (
     <section className="min-h-screen bg-[var(--color-primary)] text-white pt-24 pb-12 px-4 relative overflow-hidden">
       {/* Background Gradients */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+      <div className="absolute top-0 left-0 w-full h-full  overflow-hidden pointer-events-none z-0">
         <div className="absolute top-[-10%] left-[20%] w-[30%] h-[30%] bg-[var(--color-secondary)] rounded-full blur-[140px] opacity-20 animate-pulse-soft"></div>
         <div className="absolute bottom-[-10%] right-[10%] w-[40%] h-[40%] bg-blue-900 rounded-full blur-[140px] opacity-10 animate-float-soft"></div>
       </div>
@@ -182,8 +182,8 @@ const ContactPage = () => {
 
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 pl-2">
           {/* Main Contact Form (Left) */}
-          <div className="lg:col-span-7">
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl">
+          <div className="lg:col-span-7 ">
+            <div className="bg-white/5 backdrop-blur-xl  border border-white/10 p-8 rounded-3xl shadow-2xl">
               <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
                 <h3 className="text-2xl font-bold flex items-center gap-3">
                   <FaPaperPlane className="text-[var(--color-secondary)]" />{" "}
