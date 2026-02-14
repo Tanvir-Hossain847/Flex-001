@@ -8,7 +8,10 @@ export async function POST(request) {
     const { uid, email, displayName, photoURL } = body;
 
     if (!uid) {
-      return NextResponse.json({ error: "User ID is required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "User ID is required" },
+        { status: 400 },
+      );
     }
 
     const userRef = doc(db, "users", uid);
@@ -26,16 +29,24 @@ export async function POST(request) {
         loyaltyParams: {
           points: 0,
           tier: "Bronze",
-          nextTierPoints: 500
-        }
+          nextTierPoints: 500,
+        },
       });
-      return NextResponse.json({ message: "User created successfully" }, { status: 201 });
+      return NextResponse.json(
+        { message: "User created successfully" },
+        { status: 201 },
+      );
     }
 
-    return NextResponse.json({ message: "User already exists" }, { status: 200 });
-
+    return NextResponse.json(
+      { message: "User already exists" },
+      { status: 200 },
+    );
   } catch (error) {
     console.error("Error creating user:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }
