@@ -4,7 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import { 
   User, Mail, Phone, MapPin, Camera, Save, Lock, 
   Award, TrendingUp, Gift, Share2, CreditCard, Star, ShoppingBag, ArrowRight,
-  Plus, Edit2, Trash2, CheckCircle, AlertTriangle
+  Plus, Edit2, Trash2, CheckCircle, AlertTriangle, X
 } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
@@ -83,6 +83,8 @@ export default function ProfilePage() {
   // Address Management State
   const [addresses, setAddresses] = useState(MOCK_ADDRESSES);
   const [isAddingAddress, setIsAddingAddress] = useState(false);
+  const [editingAddressId, setEditingAddressId] = useState(null); // Track which address is being edited
+
   const [newAddress, setNewAddress] = useState({
     type: "Home",
     street: "",
@@ -96,7 +98,6 @@ export default function ProfilePage() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   
-  // Simulated or Real Data
   const loyaltyPoints = userData?.loyaltyParams?.points || 1250;
   const currentTier = userData?.loyaltyParams?.tier || "Silver";
   const nextTierPoints = userData?.loyaltyParams?.nextTierPoints || 2500;
@@ -146,17 +147,40 @@ export default function ProfilePage() {
   };
 
   // Address Functions
-  const handleAddAddress = (e) => {
+  const handleAddOrUpdateAddress = (e) => {
     e.preventDefault();
+    
     if (newAddress.isDefault) {
-      // Unset previous default
+      // Unset previous default if new/updated one is default
       setAddresses(prev => prev.map(a => ({ ...a, isDefault: false })));
     }
-    const addressWithId = { ...newAddress, id: Date.now() };
-    setAddresses([...addresses, addressWithId]);
+
+    if (editingAddressId) {
+       // Update existing address
+       setAddresses(prev => prev.map(a => a.id === editingAddressId ? { ...newAddress, id: editingAddressId } : a));
+       toast.success("Address updated successfully!");
+       setEditingAddressId(null);
+    } else {
+       // Add new address
+       const addressWithId = { ...newAddress, id: Date.now() };
+       setAddresses([...addresses, addressWithId]);
+       toast.success("Address added successfully!");
+    }
+
     setIsAddingAddress(false);
     setNewAddress({ type: "Home", street: "", city: "", state: "", zip: "", isDefault: false });
-    toast.success("Address added successfully!");
+  };
+
+  const startEditAddress = (address) => {
+    setNewAddress(address);
+    setEditingAddressId(address.id);
+    setIsAddingAddress(true); // Re-use the add form
+  };
+
+  const cancelEdit = () => {
+    setIsAddingAddress(false);
+    setEditingAddressId(null);
+    setNewAddress({ type: "Home", street: "", city: "", state: "", zip: "", isDefault: false });
   };
 
   const deleteAddress = (id) => {
@@ -456,17 +480,17 @@ export default function ProfilePage() {
                <div className="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
                  <h3 className="text-lg font-bold text-white">Address Book</h3>
                  <button 
-                   onClick={() => setIsAddingAddress(!isAddingAddress)}
+                   onClick={() => isAddingAddress ? cancelEdit() : setIsAddingAddress(true)}
                    className="flex items-center gap-2 px-3 py-1.5 bg-secondary/10 hover:bg-secondary text-secondary hover:text-white border border-secondary/20 rounded-lg text-xs font-bold transition-all"
                  >
-                   <Plus size={16} /> 
+                   {isAddingAddress ? <X size={16} /> : <Plus size={16} />}
                    {isAddingAddress ? "Cancel" : "Add New"}
                  </button>
                </div>
 
                {isAddingAddress && (
-                 <form onSubmit={handleAddAddress} className="bg-black/20 border border-white/10 rounded-xl p-4 mb-6 animate-in fade-in slide-in-from-top-2">
-                   <h4 className="font-bold text-white text-sm mb-4">New Address Details</h4>
+                 <form onSubmit={handleAddOrUpdateAddress} className="bg-black/20 border border-white/10 rounded-xl p-4 mb-6 animate-in fade-in slide-in-from-top-2">
+                   <h4 className="font-bold text-white text-sm mb-4">{editingAddressId ? "Edit Address" : "New Address Details"}</h4>
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <input 
                         placeholder="Label (e.g., Home, Work)" 
@@ -517,7 +541,7 @@ export default function ProfilePage() {
                       <label htmlFor="isDefault" className="text-sm text-zinc-400">Set as default address</label>
                    </div>
                    <button type="submit" className="w-full bg-secondary text-white font-bold py-2 rounded-lg text-sm hover:shadow-lg hover:shadow-secondary/20 transition-all">
-                     Save Address
+                     {editingAddressId ? "Update Address" : "Save Address"}
                    </button>
                  </form>
                )}
@@ -549,7 +573,10 @@ export default function ProfilePage() {
                            <CheckCircle size={16} />
                          </button>
                        )}
-                       <button className="p-2 hover:bg-white/10 rounded-lg text-zinc-400 hover:text-white">
+                       <button 
+                        onClick={() => startEditAddress(addr)}
+                        className="p-2 hover:bg-white/10 rounded-lg text-zinc-400 hover:text-white"
+                       >
                          <Edit2 size={16} />
                        </button>
                        <button 
