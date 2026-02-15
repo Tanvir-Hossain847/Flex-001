@@ -20,6 +20,7 @@ export const metadata = {
 };
 
 import { AuthProvider } from "@/context/AuthContext";
+import GlobalLoader from "@/components/GlobalLoader";
 
 export default function RootLayout({ children }) {
   return (
@@ -28,9 +29,11 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <Navbar />
-          {children}
-          <Footer />
+          <GlobalLoader>
+            <Navbar />
+            {children}
+            <Footer />
+          </GlobalLoader>
           <Toaster richColors position="top-center" />
         </AuthProvider>
       </body>

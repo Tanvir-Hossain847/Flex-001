@@ -274,11 +274,11 @@ const ProductDetailSection = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-secondary/10 via-primary to-primary"></div>
 
         <div className="relative z-10">
-          <h2 className="text-6xl md:text-8xl font-black uppercase mb-12 tracking-tighter opacity-90 scale-y-110 text-base-content leading-none">
+          <h2 className="text-6xl md:text-[8vw] font-black uppercase mb-12 tracking-tighter opacity-90 scale-y-110 text-base-content leading-none">
             Elevate <br/> Your <span className="text-secondary italic">Game</span>
           </h2>
 
-          <button className="group relative px-16 py-4 border border-base-content/20 bg-black/40 backdrop-blur-xl overflow-hidden rounded-full transition-all duration-500 hover:border-secondary/50 hover:shadow-[0_0_40px_rgba(116,10,3,0.3)]">
+          <button className="group relative px-16 py-5 border border-base-content/20 bg-black/40 backdrop-blur-xl overflow-hidden rounded-full transition-all duration-500 hover:border-secondary/50 hover:shadow-[0_0_40px_rgba(116,10,3,0.3)]">
             <span className="relative z-10 text-xl font-black tracking-[0.4em] group-hover:text-white transition-colors duration-300 text-base-content">
               PRE-ORDER NOW
             </span>

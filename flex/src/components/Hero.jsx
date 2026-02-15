@@ -4,43 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import Image from "next/image";
 
-const images = [
-  "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882424/Flex_black_1_y5fi9i.png",
-  "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882424/Flex_blue_f16qpn.png",
-  "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882424/Flex_red_hhethd.png",
-  "https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882422/flex_white_djnry7.png",
-];
-
-const descriptions = [
-  {
-    name: "Flex Black",
-    tagline: "Night fuel. Zero crash.",
-    color: "#050509",
-    text: "Deep and bold, Flex Black is crafted for late-night grind sessions. Smooth taste, low sugar, and a caffeine profile tuned to keep you focused without the crash. Perfect when the rest of the world has clocked out.",
-    highlight: "Low sugar • Sustained focus • No jitters",
-  },
-  {
-    name: "Flex Blue",
-    tagline: "Stay crisp. Stay moving.",
-    color: "#0066FF",
-    text: "Flex Blue is your crisp, hydrating boost. Electrolytes plus light carbonation keep every rep feeling fresh—whether you're in the gym or on the move. Refresh, refuel, repeat.",
-    highlight: "Electrolytes • Light carbonation • Gym-ready",
-  },
-  {
-    name: "Flex Red",
-    tagline: "Full intensity. Every rep.",
-    color: "#C3110C",
-    text: "Turn up the intensity with Flex Red. Punchy, fruit-forward flavor with performance enhancers designed for explosive workouts and high-output days. When you need to go all in.",
-    highlight: "Performance enhancers • Explosive energy • Fruit-forward",
-  },
-  {
-    name: "Flex White",
-    tagline: "Clean energy. Pure focus.",
-    color: "#F5F5F7",
-    text: "Clean, minimal, and refreshing—Flex White is all about balance. Zero distractions, zero heavy aftertaste, just a light, modern energy lift for everyday flow.",
-    highlight: "Zero distractions • Light lift • Everyday balance",
-  },
-];
+const colorMap = {
+  OBSIDIAN: "#050509",
+  PACIFIC: "#0066FF",
+  EMBER: "#C3110C",
+  ARCTIC: "#F5F5F7",
+};
 
 export default function Hero() {
   const heroRef = useRef(null);
@@ -49,24 +18,47 @@ export default function Hero() {
   const bgTextRef = useRef(null);
   const containerRef = useRef(null);
 
+  const [thermos, setThermos] = useState([]);
   const [index, setIndex] = useState(0);
   const isAnimatingRef = useRef(false);
   const indexRef = useRef(0);
   indexRef.current = index;
 
-  const active = descriptions[index];
-  const isWhite = active.name === "Flex White";
-  const isRed = active.name === "Flex Red";
+  // Fetch Data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:4000/thermos");
+        const data = await response.json();
+
+        const formattedData = data.map((item) => ({
+          ...item,
+          color: colorMap[item.color] || "#000000",
+          text: item.description,
+          highlight: item.highlight.join(" • "),
+        }));
+
+        setThermos(formattedData);
+      } catch (error) {
+        console.error("Error fetching thermos:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const active = thermos[index];
+  const isWhite = active?.color === "#F5F5F7";
+  const isRed = active?.color === "#C3110C";
   const textColor = isWhite ? "text-gray-900" : "text-white";
   const borderColor = isWhite ? "border-gray-900/10" : "border-white/10";
 
   // Navigation Logic
   const go = (direction) => {
-    if (isAnimatingRef.current) return;
+    if (isAnimatingRef.current || thermos.length === 0) return;
     const next =
       direction === "next"
-        ? (indexRef.current + 1) % 4
-        : (indexRef.current - 1 + 4) % 4;
+        ? (indexRef.current + 1) % thermos.length
+        : (indexRef.current - 1 + thermos.length) % thermos.length;
     changeSlide(next);
   };
 
@@ -77,13 +69,14 @@ export default function Hero() {
 
   // Auto-swap every 5 seconds
   useEffect(() => {
+    if (thermos.length === 0) return;
     const interval = setInterval(() => {
       if (!isAnimatingRef.current) {
         go("next");
       }
     }, 5000);
     return () => clearInterval(interval);
-  }, [index]);
+  }, [index, thermos.length]);
 
   const changeSlide = (nextIndex) => {
     isAnimatingRef.current = true;
@@ -108,12 +101,12 @@ export default function Hero() {
         rotation: 0,
         duration: 0.8,
         ease: "power3.out",
-      },
+      }
     ).fromTo(
       textRef.current.children,
       { opacity: 0, y: 20 },
       { opacity: 1, y: 0, duration: 0.5, stagger: 0.1, ease: "power2.out" },
-      "-=0.6",
+      "-=0.6"
     );
   };
 
@@ -132,6 +125,8 @@ export default function Hero() {
 
   // Initial Entrance Animation
   useEffect(() => {
+    if (thermos.length === 0) return;
+
     const ctx = gsap.context(() => {
       gsap.set([bgTextRef.current, containerRef.current], { opacity: 0 });
       gsap.set(imageRef.current, { opacity: 0, scale: 0.8, y: 50 });
@@ -152,7 +147,7 @@ export default function Hero() {
             duration: 1,
             onComplete: startFloatAnimation,
           },
-          "-=0.5",
+          "-=0.5"
         )
         .to(
           textRef.current.children,
@@ -162,15 +157,16 @@ export default function Hero() {
             duration: 0.6,
             stagger: 0.1,
           },
-          "-=0.6",
+          "-=0.6"
         );
     }, heroRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [thermos.length]);
 
   // Parallax Effect on Mouse Move
   const handleMouseMove = (e) => {
+    if (!bgTextRef.current) return;
     const { clientX, clientY } = e;
     const { innerWidth, innerHeight } = window;
     const x = (clientX / innerWidth - 0.5) * 20;
@@ -184,11 +180,15 @@ export default function Hero() {
     });
   };
 
+  if (thermos.length === 0) {
+    return null; // Let the global loader handle the empty state initially
+  }
+
   return (
     <section
       ref={heroRef}
       onMouseMove={handleMouseMove}
-      className={`relative w-full z-0  min-h-[85vh] md:min-h-[75vh] flex flex-col items-center justify-center overflow-hidden  shadow-2xl transition-colors duration-700 ease-in-out border ${borderColor}  `}
+      className={`relative w-full z-0  min-h-[85vh] md:min-h-[75vh] flex flex-col items-center justify-center overflow-hidden  shadow-2xl transition-colors duration-700 ease-in-out border py-5 ${borderColor}  `}
       style={{
         background: `radial-gradient(circle at center, ${active.color}dd 0%, ${active.color} 40%, #000000 100%)`,
       }}
@@ -199,10 +199,14 @@ export default function Hero() {
       >
         {/* Background Elements */}
         <div
-          className={`absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-[100px] opacity-30 animate-pulse ${isWhite ? "bg-gray-400" : "bg-white mix-blend-overlay"}`}
+          className={`absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-[100px] opacity-30 animate-pulse ${
+            isWhite ? "bg-gray-400" : "bg-white mix-blend-overlay"
+          }`}
         ></div>
         <div
-          className={`absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-[80px] opacity-20 animate-pulse delay-1000 ${isWhite ? "bg-gray-300" : "bg-white mix-blend-overlay"}`}
+          className={`absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-[80px] opacity-20 animate-pulse delay-1000 ${
+            isWhite ? "bg-gray-300" : "bg-white mix-blend-overlay"
+          }`}
         ></div>
       </div>
 
@@ -221,7 +225,7 @@ export default function Hero() {
         <div className="flex flex-col items-center justify-center relative h-[80vh] md:h-auto">
           <Image
             ref={imageRef}
-            src={images[index]}
+            src={active.image}
             alt={active.name}
             width={500}
             height={500}
@@ -250,11 +254,13 @@ export default function Hero() {
             </button>
 
             <div className="flex gap-2 mx-2">
-              {descriptions.map((_, i) => (
+              {thermos.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => goToIndex(i)}
-                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${i === index ? "bg-white w-6" : "bg-white/40 hover:bg-white/70"}`}
+                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                    i === index ? "bg-white w-6" : "bg-white/40 hover:bg-white/70"
+                  }`}
                 />
               ))}
             </div>
@@ -287,9 +293,7 @@ export default function Hero() {
           <div
             ref={textRef}
             className={`w-full max-w-lg p-8 md:p-10 rounded-3xl backdrop-blur-md shadow-2xl border transition-colors duration-500 overflow-hidden relative ${
-              isWhite
-                ? "bg-white/40 border-white/50"
-                : "bg-black/20 border-white/10"
+              isWhite ? "bg-white/40 border-white/50" : "bg-black/20 border-white/10"
             }`}
           >
             {/* Decorative element inside card */}

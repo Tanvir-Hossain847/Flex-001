@@ -136,34 +136,36 @@ export default function VisualShowcase() {
           centeredSlides={true}
           slidesPerView={"auto"}
           loop={true}
+          speed={800}
           autoplay={{
-            delay: 2000,
+            delay: 3000,
             disableOnInteraction: false,
             pauseOnMouseEnter: true,
           }}
           coverflowEffect={{
             rotate: 0,
             stretch: 0,
-            depth: 150,
-            modifier: 2.5,
+            depth: 100,
+            modifier: 2,
             slideShadows: false,
           }}
           pagination={{ clickable: true }}
           modules={[EffectCoverflow, Pagination, Autoplay]}
-          className="mySwiper w-full max-w-full py-12 relative z-10"
+          className="mySwiper w-full max-w-full py-20 relative z-10"
         >
           {variants.map((item, index) => (
             <SwiperSlide
               key={index}
-              className="w-[300px] md:w-[350px]"
+              className="w-[280px] md:w-[400px] flex justify-center items-center"
             >
-              <div className="relative w-full h-[400px] transition-transform duration-500">
+              <div className="relative w-full h-[500px] flex items-center justify-center">
                 <Image
                   src={item.src}
                   alt={item.name}
                   fill
-                  className="object-contain drop-shadow-xl"
-                  sizes="(max-width: 768px) 100vw, 350px"
+                  className="object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] active-slide-glow"
+                  sizes="(max-width: 768px) 280px, 400px"
+                  priority={index === 0}
                 />
               </div>
             </SwiperSlide>
