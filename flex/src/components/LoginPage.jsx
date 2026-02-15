@@ -34,7 +34,20 @@ export default function LoginPage() {
     setError("");
 
     try {
-      await loginUser(email, password);
+      const result = await loginUser(email, password);
+
+      // 🔥 Get Firebase ID Token
+      const token = await result.user.getIdToken();
+
+      // Send token to backend
+      await fetch("http://localhost:3000/product", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token }),
+      });
+
       animateAndRedirect();
     } catch (err) {
       setError("Failed to login. Please check your credentials.");
@@ -44,7 +57,19 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
-      await googleLogin();
+      const result = await googleLogin();
+
+      const token = await result.user.getIdToken();
+
+      await fetch("http://localhost:3000/product", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
       animateAndRedirect();
     } catch (err) {
       setError("Failed to login with Google.");
@@ -116,7 +141,11 @@ export default function LoginPage() {
               Access your FLEX account
             </p>
 
-            {error && <div className="alert alert-error mb-4"><span>{error}</span></div>}
+            {error && (
+              <div className="alert alert-error mb-4">
+                <span>{error}</span>
+              </div>
+            )}
 
             <form className="space-y-5" onSubmit={handleLogin}>
               {/* Email */}
@@ -124,14 +153,14 @@ export default function LoginPage() {
                 <label className="label">
                   <span className="label-text">Email</span>
                 </label>
-                  <input
-                    type="email"
-                    placeholder="you@example.com"
-                    className="input input-bordered w-full focus:border-secondary"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
+                <input
+                  type="email"
+                  placeholder="you@example.com"
+                  className="input input-bordered w-full focus:border-secondary"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
               </div>
 
               {/* Password */}
@@ -139,14 +168,14 @@ export default function LoginPage() {
                 <label className="label">
                   <span className="label-text">Password</span>
                 </label>
-                  <input
-                    type="password"
-                    placeholder="********"
-                    className="input input-bordered w-full focus:border-secondary"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
+                <input
+                  type="password"
+                  placeholder="********"
+                  className="input input-bordered w-full focus:border-secondary"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
               </div>
 
               {/* Remember & Forgot */}
@@ -171,7 +200,7 @@ export default function LoginPage() {
 
             <div className="divider my-6">or</div>
 
-            <button 
+            <button
               className="btn btn-outline w-full"
               type="button"
               onClick={handleGoogleLogin}
@@ -181,7 +210,10 @@ export default function LoginPage() {
 
             <p className="text-sm mt-6 text-center">
               Don’t have an account?{" "}
-              <Link href={'/register'} className="text-secondary font-medium cursor-pointer">
+              <Link
+                href={"/register"}
+                className="text-secondary font-medium cursor-pointer"
+              >
                 Register
               </Link>
             </p>
