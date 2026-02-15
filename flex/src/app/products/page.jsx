@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { products } from "@/data/products";
 import { FaArrowRight, FaImage } from "react-icons/fa"; // Added FaImage for placeholder
+import Image from "next/image";
+import Link from "next/link";
 
 export default function ProductsPage() {
   const [filter, setFilter] = useState("All");
@@ -57,83 +59,85 @@ export default function ProductsPage() {
       <section className="max-w-7xl mx-auto px-6 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              // ADDED: "flex flex-col h-full" to make the card stretch to fill the grid height
-              className="group relative bg-neutral-900/30 border border-white/5 rounded-3xl overflow-hidden hover:border-white/20 transition-all duration-500 hover:-translate-y-2 flex flex-col h-full"
-            >
-              {/* New Badge */}
-              {product.isNew && (
-                <div className="absolute top-4 left-4 z-10 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                  New Drop
-                </div>
-              )}
-
-              <div className="relative h-[400px] flex items-center justify-center p-8 bg-gradient-to-b from-white/5 to-transparent shrink-0">
-                {/* 1. Only show Glow if color exists */}
-                {product.color && (
-                  <div
-                    className="absolute w-40 h-40 rounded-full blur-[80px] opacity-0 group-hover:opacity-50 transition-opacity duration-700"
-                    style={{ backgroundColor: product.color }}
-                  />
-                )}
-
-                {/* 2. Conditional Rendering: Show Image OR Placeholder */}
-                {product.image ? (
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="relative z-10 h-full w-auto object-contain drop-shadow-2xl group-hover:scale-110 transition-transform duration-500 ease-out"
-                  />
-                ) : (
-                  // Fallback for missing images
-                  <div className="flex flex-col items-center justify-center opacity-20">
-                    <FaImage className="text-6xl mb-2" />
-                    <span className="text-xs uppercase tracking-widest font-bold">
-                      Coming Soon
-                    </span>
+            <Link href={`/products/${product.id}`} key={product.id}>
+              <div
+                // ADDED: "flex flex-col h-full" to make the card stretch to fill the grid height
+                className="group relative bg-neutral-900/30 border border-white/5 rounded-3xl overflow-hidden hover:border-white/20 transition-all duration-500 hover:-translate-y-2 flex flex-col h-full"
+              >
+                {/* New Badge */}
+                {product.isNew && (
+                  <div className="absolute top-4 left-4 z-10 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                    New Drop
                   </div>
                 )}
-              </div>
 
-              {/* Product Info */}
-              <div className="p-8 flex flex-col flex-grow">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <h3 className="text-2xl font-bold text-white mb-1 group-hover:text-red-500 transition-colors">
-                      {product.name}
-                    </h3>
-                    <p className="text-gray-500 text-sm font-mono">
-                      {product.category}
-                    </p>
-                  </div>
-                  <span className="text-xl font-bold text-white">
-                    ${product.price}
-                  </span>
+                <div className="relative h-100 flex items-center justify-center p-8 bg-gradient-to-b from-white/5 to-transparent shrink-0">
+                  {/* 1. Only show Glow if color exists */}
+                  {product.color && (
+                    <div
+                      className="absolute w-40 h-40 rounded-full blur-[80px] opacity-0 group-hover:opacity-50 transition-opacity duration-700"
+                      style={{ backgroundColor: product.color }}
+                    />
+                  )}
+
+                  {/* 2. Conditional Rendering: Show Image OR Placeholder */}
+                  {product.image ? (
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      className="relative z-10 h-full w-auto object-contain drop-shadow-2xl group-hover:scale-110 transition-transform duration-500 ease-out"
+                    />
+                  ) : (
+                    // Fallback for missing images
+                    <div className="flex flex-col items-center justify-center opacity-20">
+                      <FaImage className="text-6xl mb-2" />
+                      <span className="text-xs uppercase tracking-widest font-bold">
+                        Coming Soon
+                      </span>
+                    </div>
+                  )}
                 </div>
 
-                <p className="text-gray-400 text-sm mb-6 line-clamp-2">
-                  {product.description}
-                </p>
-
-                {/* Features Tags */}
-                <div className="flex flex-wrap gap-2 mb-8">
-                  {product.features.slice(0, 2).map((feat, i) => (
-                    <span
-                      key={i}
-                      className="text-xs border border-white/10 px-3 py-1 rounded-md text-gray-400"
-                    >
-                      {feat}
+                {/* Product Info */}
+                <div className="p-8 flex flex-col flex-grow">
+                  <div className="flex justify-between items-start mb-2">
+                    <div>
+                      <h3 className="text-2xl font-bold text-white mb-1 group-hover:text-red-500 transition-colors">
+                        {product.name}
+                      </h3>
+                      <p className="text-gray-500 text-sm font-mono">
+                        {product.category}
+                      </p>
+                    </div>
+                    <span className="text-xl font-bold text-white">
+                      ${product.price}
                     </span>
-                  ))}
-                </div>
+                  </div>
 
-                {/* Action Button */}
-                <button className="mt-auto w-full bg-white text-black font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-red-600 hover:text-white transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(207,15,71,0.4)]">
-                  Add to Cart <FaArrowRight />
-                </button>
+                  <p className="text-gray-400 text-sm mb-6 line-clamp-2">
+                    {product.description}
+                  </p>
+
+                  {/* Features Tags */}
+                  <div className="flex flex-wrap gap-2 mb-8">
+                    {product.features.slice(0, 2).map((feat, i) => (
+                      <span
+                        key={i}
+                        className="text-xs border border-white/10 px-3 py-1 rounded-md text-gray-400"
+                      >
+                        {feat}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Action Button */}
+                  <button className="mt-auto w-full bg-white text-black font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-red-600 hover:text-white transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(207,15,71,0.4)]">
+                    Add to Cart <FaArrowRight />
+                  </button>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
