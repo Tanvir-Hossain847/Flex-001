@@ -3,47 +3,37 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
   LayoutDashboard, 
-  ShoppingBag, 
-  Heart, 
-  History, 
-  User, 
-  Settings, 
+  Users, 
+  Package, 
+  Image as ImageIcon, 
   LogOut,
-  CreditCard,
-  Star,
   Shield,
   Home,
 } from "lucide-react";
-import { cn } from "@/lib/utils"; // Assuming utils exists, if not I'll inline helper
 import { useAuth } from "@/context/AuthContext";
 
-// Helper if cn doesn't exist
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
-
 const menuItems = [
-  { icon: LayoutDashboard, label: "Overview", href: "/dashboard" },
-  { icon: ShoppingBag, label: "My Cart", href: "/dashboard/cart" },
-  { icon: Heart, label: "Wishlist", href: "/dashboard/wishlist" },
-  { icon: History, label: "Order History", href: "/dashboard/orders" },
-  { icon: CreditCard, label: "Payments", href: "/dashboard/payments" },
-  // { icon: Star, label: "My Reviews", href: "/dashboard/reviews" },
-  { icon: User, label: "Profile", href: "/dashboard/profile" },
-  // { icon: Settings, label: "Settings", href: "/dashboard/settings" },
+  { icon: LayoutDashboard, label: "Overview", href: "/admin" },
+  { icon: Package, label: "Orders", href: "/admin/orders" }, // Reusing Package icon or can use ShoppingBag/Clipboard
+  { icon: Users, label: "Users", href: "/admin/users" },
+  { icon: Package, label: "Products", href: "/admin/products" },
+  { icon: ImageIcon, label: "Hero Manager", href: "/admin/hero" },
 ];
 
-export default function DashboardSidebar() {
+export default function AdminSidebar() {
   const pathname = usePathname();
-  const { logout, userData } = useAuth();
+  const { logout } = useAuth();
 
   return (
     <aside className="w-64 min-h-[calc(100vh-80px)] hidden md:flex flex-col bg-zinc-950/50 backdrop-blur-md border-r border-white/5 p-6 sticky top-20">
       <div className="mb-8">
-        <h2 className="text-xl font-bold bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
-          Dashboard
-        </h2>
-        <p className="text-xs text-zinc-500 mt-1">Manage your account</p>
+        <div className="flex items-center gap-2 mb-1">
+          <Shield size={20} className="text-secondary" />
+          <h2 className="text-xl font-bold bg-gradient-to-r from-secondary to-red-400 bg-clip-text text-transparent">
+            Admin Panel
+          </h2>
+        </div>
+        <p className="text-xs text-zinc-500 mt-1">Manage your platform</p>
       </div>
 
       <nav className="flex-1 space-y-2">
@@ -55,19 +45,19 @@ export default function DashboardSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={classNames(
+              className={[
                 "group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ease-out",
                 isActive 
                   ? "bg-secondary/10 text-secondary shadow-[0_0_20px_rgba(255,11,85,0.15)] ring-1 ring-secondary/20" 
                   : "text-zinc-400 hover:text-white hover:bg-white/5 hover:translate-x-1"
-              )}
+              ].join(" ")}
             >
               <Icon 
                 size={20} 
-                className={classNames(
+                className={[
                   "transition-colors duration-300",
                   isActive ? "text-secondary" : "text-zinc-500 group-hover:text-white"
-                )} 
+                ].join(" ")} 
               />
               <span className="font-medium text-sm">{item.label}</span>
               
@@ -87,15 +77,13 @@ export default function DashboardSidebar() {
           <Home size={20} className="text-zinc-500 group-hover:text-white transition-colors" />
           <span className="font-medium text-sm">Back to Home</span>
         </Link>
-        {userData?.role === "admin" && (
-          <Link
-            href="/admin"
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-amber-400 bg-amber-400/5 hover:bg-amber-400/10 transition-all duration-300 group ring-1 ring-amber-400/20"
-          >
-            <Shield size={20} className="text-amber-400" />
-            <span className="font-medium text-sm">Admin Panel</span>
-          </Link>
-        )}
+        <Link
+          href="/dashboard"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-300 group"
+        >
+          <LayoutDashboard size={20} className="text-zinc-500 group-hover:text-white transition-colors" />
+          <span className="font-medium text-sm">User Dashboard</span>
+        </Link>
         <button 
           onClick={() => logout()}
           className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-zinc-400 hover:text-red-400 hover:bg-red-400/5 transition-all duration-300 group"

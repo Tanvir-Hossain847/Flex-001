@@ -3,9 +3,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRef, useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/context/CartContext";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { BsXDiamond } from "react-icons/bs";
+import { ShoppingBag, Shield } from "lucide-react";
 
 gsap.registerPlugin(useGSAP);
 
@@ -17,7 +19,8 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, userData, logout } = useAuth();
+  const { cartCount } = useCart();
   const menuRef = useRef(null);
   const itemsRef = useRef([]);
   const iconRef = useRef(null);
@@ -155,6 +158,26 @@ export default function Navbar() {
 
         {/* CTA */}
         <div className="flex items-center gap-4">
+          {/* Cart Icon - Always visible */}
+          {/* Cart Icon - Visible to everyone EXCEPT admin */ }
+          {userData?.role !== "admin" && (
+            <Link href="/dashboard/cart" className="relative group">
+              <ShoppingBag size={22} className="text-white group-hover:text-secondary transition-colors duration-200" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2.5 bg-secondary text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-[0_0_10px_rgba(255,11,85,0.5)] animate-in zoom-in duration-300">
+                  {cartCount > 9 ? '9+' : cartCount}
+                </span>
+              )}
+            </Link>
+          )}
+
+          {/* Admin Panel Icon - Admin only */}
+          {userData?.role === "admin" && (
+            <Link href="/admin" className="relative group" title="Admin Panel">
+              <Shield size={22} className="text-amber-400 group-hover:text-amber-300 transition-colors duration-200" />
+            </Link>
+          )}
+
           {!user ? (
             <>
               <Link
@@ -178,10 +201,10 @@ export default function Navbar() {
                 </p>
               </div>
               {user.photoURL && (
-                <Link href={"/dashboard"}>
+                <Link href={userData?.role === "admin" ? "/admin" : "/dashboard"}>
                   {" "}
                   <div className="avatar">
-                    <div className="w-10 rounded-full ring ring-secondary ring-offset-base-100 ring-offset-2">
+                    <div className={`w-10 rounded-full ring ring-offset-base-100 ring-offset-2 ${userData?.role === "admin" ? "ring-amber-400" : "ring-secondary"}`}>
                       <img src={user.photoURL} alt="avatar" />
                     </div>
                   </div>{" "}
