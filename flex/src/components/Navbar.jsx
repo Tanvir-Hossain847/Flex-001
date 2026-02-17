@@ -25,6 +25,7 @@ export default function Navbar() {
   const itemsRef = useRef([]);
   const iconRef = useRef(null);
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Scroll-aware background
   useEffect(() => {
@@ -103,7 +104,7 @@ export default function Navbar() {
       <nav className="max-w-7xl mx-auto py-4 px-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" aria-label="Home">
-          <div className="cursor-pointer transition-transform duration-200 hover:scale-105">
+          <div className="cursor-pointer transition-transform duration-200 hover:scale-105 z-50 relative">
             <Image
               src="https://res.cloudinary.com/do3iu9q7d/image/upload/v1770826040/transperent_logo_fskhub.png"
               alt="Logo"
@@ -114,10 +115,10 @@ export default function Navbar() {
           </div>
         </Link>
 
-        {/* Center Arc Menu */}
+        {/* Desktop Menu (GSAP Arc) - Hidden on Mobile */}
         <div
           ref={menuRef}
-          className="relative flex items-center justify-center w-100 pl-30 py-4"
+          className="relative hidden md:flex items-center justify-center w-100 pl-30 py-4"
           onMouseEnter={handleEnter}
           onMouseLeave={handleLeave}
         >
@@ -156,11 +157,10 @@ export default function Navbar() {
           </ul>
         </div>
 
-        {/* CTA */}
-        <div className="flex items-center gap-4">
-          {/* Cart Icon - Always visible */}
-          {/* Cart Icon - Visible to everyone EXCEPT admin */ }
-          {userData?.role !== "admin" && (
+        {/* CTA & Mobile Toggle */}
+        <div className="flex items-center gap-4 z-50 relative">
+          {/* Cart Icon */}
+           {userData?.role !== "admin" && (
             <Link href="/dashboard/cart" className="relative group">
               <ShoppingBag size={22} className="text-white group-hover:text-secondary transition-colors duration-200" />
               {cartCount > 0 && (
@@ -171,54 +171,98 @@ export default function Navbar() {
             </Link>
           )}
 
-          {/* Admin Panel Icon - Admin only */}
+          {/* Admin Panel Icon */}
           {userData?.role === "admin" && (
             <Link href="/admin" className="relative group" title="Admin Panel">
               <Shield size={22} className="text-amber-400 group-hover:text-amber-300 transition-colors duration-200" />
             </Link>
           )}
 
-          {!user ? (
-            <>
-              <Link
-                href="/login"
-                className="text-white px-4 py-2 text-sm font-medium hover:text-secondary transition-colors"
-              >
-                Log In
-              </Link>
-              <Link
-                href="/register"
-                className="bg-secondary text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-[#FF0B55] hover:shadow-[0_0_20px_rgba(255,11,85,0.3)] active:scale-95 transition-all duration-200"
-              >
-                Register
-              </Link>
-            </>
-          ) : (
-            <div className="flex items-center gap-4">
-              <div className="hidden md:block text-right">
-                <p className="text-white text-sm font-medium">
-                  {user.displayName || user.email}
-                </p>
-              </div>
-              {user.photoURL && (
-                <Link href={userData?.role === "admin" ? "/admin" : "/dashboard"}>
-                  {" "}
-                  <div className="avatar">
-                    <div className={`w-10 rounded-full ring ring-offset-base-100 ring-offset-2 ${userData?.role === "admin" ? "ring-amber-400" : "ring-secondary"}`}>
-                      <img src={user.photoURL} alt="avatar" />
-                    </div>
-                  </div>{" "}
+          {/* Authentication Links (Desktop) */}
+          <div className="hidden md:flex items-center gap-4">
+            {!user ? (
+              <>
+                <Link
+                  href="/login"
+                  className="text-white px-4 py-2 text-sm font-medium hover:text-secondary transition-colors"
+                >
+                  Log In
                 </Link>
-              )}
-              <button
-                onClick={() => logout()}
-                className="text-white px-4 py-2 text-sm font-medium hover:text-secondary transition-colors"
-              >
-                Logout
-              </button>
-            </div>
-          )}
+                <Link
+                  href="/register"
+                  className="bg-secondary text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-[#FF0B55] hover:shadow-[0_0_20px_rgba(255,11,85,0.3)] active:scale-95 transition-all duration-200"
+                >
+                  Register
+                </Link>
+              </>
+            ) : (
+              <div className="flex items-center gap-4">
+                <div className="text-right">
+                  <p className="text-white text-sm font-medium">
+                    {user.displayName || user.email}
+                  </p>
+                </div>
+                {user.photoURL && (
+                  <Link href={userData?.role === "admin" ? "/admin" : "/dashboard"}>
+                    <div className="avatar">
+                      <div className={`w-10 rounded-full ring ring-offset-base-100 ring-offset-2 ${userData?.role === "admin" ? "ring-amber-400" : "ring-secondary"}`}>
+                        <img src={user.photoURL} alt="avatar" />
+                      </div>
+                    </div>
+                  </Link>
+                )}
+                <button
+                  onClick={() => logout()}
+                  className="text-white px-4 py-2 text-sm font-medium hover:text-secondary transition-colors"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Menu Toggle */}
+          <button 
+            className="md:hidden text-white p-2"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <BsXDiamond size={24} /> : <div className="space-y-1.5">
+              <span className="block w-6 h-0.5 bg-white"></span>
+              <span className="block w-6 h-0.5 bg-white"></span>
+              <span className="block w-4 h-0.5 bg-white ml-auto"></span>
+            </div>}
+          </button>
         </div>
+
+        {/* Mobile Menu Overlay */}
+        {mobileMenuOpen && (
+          <div className="fixed inset-0 bg-black/95 backdrop-blur-xl z-40 flex flex-col items-center justify-center animate-in fade-in duration-200 md:hidden">
+            <nav className="flex flex-col items-center gap-8 text-center">
+              {navLinks.map((link) => (
+                <Link 
+                  key={link.label}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-2xl font-bold text-white hover:text-secondary transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <div className="h-px w-10 bg-white/10 my-4" />
+              {!user ? (
+                <div className="flex flex-col gap-4">
+                  <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="text-xl text-white">Log In</Link>
+                  <Link href="/register" onClick={() => setMobileMenuOpen(false)} className="text-xl text-secondary font-bold">Register</Link>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-4">
+                   <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="text-xl text-white">Dashboard</Link>
+                   <button onClick={() => { logout(); setMobileMenuOpen(false); }} className="text-xl text-red-500">Logout</button>
+                </div>
+              )}
+            </nav>
+          </div>
+        )}
       </nav>
     </header>
   );

@@ -213,7 +213,7 @@ export default function Hero() {
       {/* Big Background Text */}
       <h1
         ref={bgTextRef}
-        className={`absolute top-1/5 left-1/3 -translate-x-1/2 -translate-y-1/2 text-[18vw] leading-none font-black tracking-widest select-none pointer-events-none transition-colors duration-500 whitespace-nowrap ${
+        className={`absolute top-[15%] left-1/2 md:left-1/3 -translate-x-1/2 -translate-y-1/2 text-[18vw] leading-none font-black tracking-widest select-none pointer-events-none transition-colors duration-500 whitespace-nowrap ${
           isWhite ? "text-black/10" : isRed ? "text-white/20" : "text-white/10"
         }`}
       >

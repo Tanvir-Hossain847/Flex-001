@@ -91,7 +91,7 @@ export default function VisualShowcase() {
         EDITORIAL INTRO — "The Collection"
         ================================================================
       */}
-      <section className="relative py-10 max-w-7xl mx-auto border-t border-base-content/5">
+      <section className="relative py-10 w-11/12 md:max-w-7xl mx-auto border-t border-base-content/5">
         <div className="showcase-heading grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
           <div className="lg:col-span-7">
             <div className="flex items-center gap-4 mb-8">

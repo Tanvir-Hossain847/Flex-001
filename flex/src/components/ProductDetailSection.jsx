@@ -26,14 +26,22 @@ const ProductDetailSection = () => {
     });
 
     // --- Hotspots Entry & Auto-Reveal ---
-    gsap.from(".hotspot-group", {
-      scale: 0,
-      opacity: 0,
-      duration: 1,
-      stagger: 0.2,
-      ease: "elastic.out(1, 0.75)",
-      delay: 0.8,
-    });
+    // --- Hotspots Entry & Auto-Reveal ---
+    gsap.fromTo(".hotspot-group", 
+      { scale: 0, opacity: 0 },
+      {
+        scale: 1,
+        opacity: 1,
+        duration: 1,
+        stagger: 0.2,
+        ease: "elastic.out(1, 0.75)",
+        scrollTrigger: {
+          trigger: heroRef.current,
+          start: "top 60%", // Animate when product is in view
+          toggleActions: "play none none reverse",
+        },
+      }
+    );
 
     // Auto-reveal hotspots on scroll
     gsap.to(".hotspot-line", {
@@ -75,39 +83,51 @@ const ProductDetailSection = () => {
     });
 
     // Clipping Mask Text Reveal
-    gsap.from(".reveal-text", {
-      yPercent: 100,
-      duration: 1.5,
-      stagger: 0.2,
-      ease: "expo.out",
-      scrollTrigger: {
-        trigger: ".editorial-section",
-        start: "top 60%",
+    gsap.fromTo(".reveal-text", 
+      { yPercent: 100 },
+      {
+        yPercent: 0,
+        duration: 1.5,
+        stagger: 0.2,
+        ease: "expo.out",
+        scrollTrigger: {
+          trigger: ".editorial-section",
+          start: "top 75%", // Trigger earlier
+          toggleActions: "play none none reverse", // Allow re-play
+        }
       }
-    });
+    );
 
     // Description and line reveal
-    gsap.from(".editorial-content-reveal", {
-      opacity: 0,
-      y: 40,
-      duration: 1,
-      stagger: 0.2,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: ".editorial-section",
-        start: "top 40%",
+    gsap.fromTo(".editorial-content-reveal", 
+      { opacity: 0, y: 40 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        stagger: 0.2,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".editorial-section",
+          start: "top 65%",
+          toggleActions: "play none none reverse",
+        }
       }
-    });
+    );
 
-    gsap.from(".editorial-line", {
-      scaleX: 0,
-      duration: 1.2,
-      ease: "expo.inOut",
-      scrollTrigger: {
-        trigger: ".editorial-section",
-        start: "top 40%",
+    gsap.fromTo(".editorial-line", 
+      { scaleX: 0 },
+      {
+        scaleX: 1,
+        duration: 1.2,
+        ease: "expo.inOut",
+        scrollTrigger: {
+          trigger: ".editorial-section",
+          start: "top 65%",
+          toggleActions: "play none none reverse",
+        }
       }
-    });
+    );
 
   }, { scope: containerRef });
 
@@ -140,11 +160,11 @@ const ProductDetailSection = () => {
         <div className="absolute bottom-40 left-10 w-20 h-20 border border-secondary/30 rounded-full animate-[bounce_5s_infinite]"></div>
 
         {/* Main Product Image Container */}
-        <div className="relative z-10 w-full flex justify-center items-center mt-20">
+        <div className="relative z-10 w-11/12 md:w-full flex justify-center items-center mt-20">
           {/* Glowing Backlight */}
           <div className="absolute w-96 h-96 bg-secondary rounded-full blur-3xl opacity-20"></div>
 
-          <div className="relative w-full max-w-230 transition-transform duration-500 hover:scale-[1.01]">
+          <div className="relative w-11/12 md:max-w-230 transition-transform duration-500 hover:scale-[1.01]">
             <Image
               src="https://res.cloudinary.com/do3iu9q7d/image/upload/v1770882423/Transparent-Model_z7lplb.png"
               alt="Flex Thermos"
