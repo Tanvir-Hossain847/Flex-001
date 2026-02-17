@@ -1,35 +1,43 @@
 "use client";
 import { Package, Heart, ShoppingBag } from "lucide-react";
-import Link from "next/link"; // Changed to use Link
-
-const stats = [
-  { 
-    label: "Active Orders", 
-    value: "2", 
-    icon: Package, 
-    color: "text-blue-400", 
-    bg: "bg-blue-400/10",
-    href: "/dashboard/orders" 
-  },
-  { 
-    label: "Wishlist Items", 
-    value: "12", 
-    icon: Heart, 
-    color: "text-pink-400", 
-    bg: "bg-pink-400/10",
-    href: "/dashboard/wishlist"
-  },
-  { 
-    label: "Total Spent", 
-    value: "$450.00", 
-    icon: ShoppingBag, 
-    color: "text-green-400", 
-    bg: "bg-green-400/10",
-    href: "/dashboard/payments" 
-  },
-];
+import Link from "next/link"; 
+import { useWishlist } from "@/context/WishlistContext";
+import { useCart } from "@/context/CartContext";
 
 export default function StatsGrid() {
+  const { wishlistCount } = useWishlist();
+  const { cartCount } = useCart(); 
+
+  // Placeholder for orders and spent until we have that data
+  // But wishlist count is now real!
+  
+  const stats = [
+    { 
+      label: "Active Cart", 
+      value: cartCount.toString(), 
+      icon: ShoppingBag, 
+      color: "text-blue-400", 
+      bg: "bg-blue-400/10",
+      href: "/dashboard/cart" 
+    },
+    { 
+      label: "Wishlist Items", 
+      value: wishlistCount.toString(), 
+      icon: Heart, 
+      color: "text-pink-400", 
+      bg: "bg-pink-400/10",
+      href: "/dashboard/wishlist"
+    },
+    { 
+      label: "Total Orders", 
+      value: "0", // Placeholder until order history API exists
+      icon: Package, 
+      color: "text-green-400", 
+      bg: "bg-green-400/10",
+      href: "/dashboard/orders" 
+    },
+  ];
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {stats.map((stat, index) => {
@@ -52,7 +60,6 @@ export default function StatsGrid() {
           </div>
         );
 
-        // Conditional wrapping: if href exists, wrap in Link
         return stat.href ? (
           <Link key={index} href={stat.href} className="block">
             {CardContent}

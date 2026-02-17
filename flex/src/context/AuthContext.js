@@ -14,20 +14,48 @@ import axios from "axios";
 
 const AuthContext = createContext();
 
+const USERS_API = "http://localhost:4000/users";
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [userData, setUserData] = useState(null); // Extended user data
+  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Helper to fetch extended user data
-  const fetchUserData = async (uid) => {
+  // Helper: save or update user in backend (prevents duplicates by email)
+  const saveUserToServer = async (userInfo) => {
     try {
-      const response = await axios.get(`/api/users/${uid}`);
-      if (response.data) {
-        setUserData(response.data);
+      // First check if user already exists
+      const res = await axios.get(USERS_API);
+      const allUsers = Array.isArray(res.data) ? res.data : [];
+      const existingUser = allUsers.find((u) => u.email === userInfo.email);
+
+      if (existingUser) {
+        // User already exists — don't create duplicate, just return existing data
+        setUserData(existingUser);
+        return existingUser;
+      }
+
+      // New user — save to server
+      const response = await axios.post(USERS_API, userInfo);
+      const savedUser = response.data;
+      setUserData(savedUser);
+      return savedUser;
+    } catch (error) {
+      console.error("Failed to save user to server:", error);
+    }
+  };
+
+  // Helper: fetch user data from server by email
+  const fetchUserData = async (email) => {
+    try {
+      const res = await axios.get(USERS_API);
+      const allUsers = Array.isArray(res.data) ? res.data : [];
+      const found = allUsers.find((u) => u.email === email);
+      if (found) {
+        setUserData(found);
       }
     } catch (error) {
-      console.error("Failed to fetch extended user data:", error);
+      console.error("Failed to fetch user data:", error);
     }
   };
 
@@ -39,28 +67,23 @@ export const AuthProvider = ({ children }) => {
         email,
         password
       );
-      const user = userCredential.user;
+      const firebaseUser = userCredential.user;
 
       // Update Firebase Auth Profile
-      await updateProfile(user, {
+      await updateProfile(firebaseUser, {
         displayName: name,
         photoURL: photoURL || "https://i.ibb.co/MgsTCcv/avater.jpg",
       });
 
-      // Sync with database
-      try {
-        const newUser = {
-          uid: user.uid,
-          email: user.email,
-          displayName: name,
-          photoURL: photoURL || "https://i.ibb.co/MgsTCcv/avater.jpg",
-          createdAt: new Date().toISOString(),
-        };
-        await axios.post("/api/users", newUser);
-        setUserData(newUser); // Set initial user data
-      } catch (axiosError) {
-        console.error("Failed to sync user with database:", axiosError);
-      }
+      // Save to backend server with role
+      await saveUserToServer({
+        uid: firebaseUser.uid,
+        email: firebaseUser.email,
+        displayName: name,
+        photoURL: photoURL || "https://i.ibb.co/MgsTCcv/avater.jpg",
+        role: "user",
+        createdAt: new Date().toISOString(),
+      });
 
       return userCredential;
     } catch (error) {
@@ -74,26 +97,21 @@ export const AuthProvider = ({ children }) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-  // Google Login
+  // Google Login — saves to server and prevents duplicates
   const googleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
+      const firebaseUser = result.user;
 
-      // Sync with database
-      try {
-        const payload = {
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-        };
-        await axios.post("/api/users", payload);
-        // After syncing, fetch latest data which might include phone/address if user existed
-        fetchUserData(user.uid);
-      } catch (axiosError) {
-        console.error("Failed to sync user with database:", axiosError);
-      }
+      // Save to backend (will skip if already exists)
+      await saveUserToServer({
+        uid: firebaseUser.uid,
+        email: firebaseUser.email,
+        displayName: firebaseUser.displayName,
+        photoURL: firebaseUser.photoURL,
+        role: "user",
+        createdAt: new Date().toISOString(),
+      });
 
       return result;
     } catch (error) {
@@ -102,7 +120,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Update User Profile (Name, Phone, Address, Bio, etc.)
+  // Update User Profile
   const updateUserProfile = async (uid, data) => {
     try {
       if (!uid) throw new Error("User ID is required");
@@ -115,17 +133,19 @@ export const AuthProvider = ({ children }) => {
         });
       }
 
-      // Update Database via API
-      const response = await axios.put(`/api/users/${uid}`, data);
+      // Find the user in the backend by email and update
+      if (userData?._id) {
+        await axios.put(`${USERS_API}/${userData._id}`, data);
+      }
       
       // Update local state immediately
       setUserData(prev => ({ ...prev, ...data }));
       
-      // Reload user to refresh auth object if needed
+      // Reload user to refresh auth object
       await auth.currentUser.reload();
       setUser({ ...auth.currentUser });
 
-      return response.data;
+      return data;
     } catch (error) {
       console.error("Error updating profile:", error);
       throw error;
@@ -146,12 +166,10 @@ export const AuthProvider = ({ children }) => {
   // Delete User Account
   const deleteUserAccount = async () => {
     try {
-      const user = auth.currentUser;
-      if (!user) throw new Error("No user logged in");
+      const currentUser = auth.currentUser;
+      if (!currentUser) throw new Error("No user logged in");
       
-      // Implement additional clean up logic here (e.g. delete from database)
-      // For now, we just delete from Firebase Auth
-      await user.delete();
+      await currentUser.delete();
       setUserData(null);
       setUser(null);
     } catch (error) {
@@ -164,8 +182,8 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-      if (currentUser) {
-        await fetchUserData(currentUser.uid);
+      if (currentUser?.email) {
+        await fetchUserData(currentUser.email);
       } else {
         setUserData(null);
       }

@@ -34,20 +34,7 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const result = await loginUser(email, password);
-
-      // 🔥 Get Firebase ID Token
-      const token = await result.user.getIdToken();
-
-      // Send token to backend
-      await fetch("http://localhost:3000/product", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token }),
-      });
-
+      await loginUser(email, password);
       animateAndRedirect();
     } catch (err) {
       setError("Failed to login. Please check your credentials.");
@@ -57,19 +44,7 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
-      const result = await googleLogin();
-
-      const token = await result.user.getIdToken();
-
-      await fetch("http://localhost:3000/product", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
+      await googleLogin();
       animateAndRedirect();
     } catch (err) {
       setError("Failed to login with Google.");
