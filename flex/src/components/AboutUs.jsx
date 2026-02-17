@@ -27,7 +27,6 @@ export default function AboutUs() {
         },
         scale: 0.5,
         opacity: 0,
-        stagger: 0.2,
         duration: 0.6,
         ease: "back.out(1.7)",
       });
