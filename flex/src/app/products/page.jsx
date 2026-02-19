@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FaArrowRight, FaImage, FaSpinner, FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaArrowRight, FaImage, FaSpinner, FaHeart, FaRegHeart, FaShoppingBag } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
 import { useProducts } from "@/context/ProductContext";
@@ -181,15 +181,21 @@ export default function ProductsPage() {
 
                     {/* Action Buttons */}
                     <div className="mt-auto flex gap-2">
+                       <button
+                        className="flex-[2] bg-white text-black font-bold py-4 rounded-xl uppercase tracking-wider hover:bg-red-600 hover:text-white transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(207,15,71,0.4)]"
+                      >
+                        Buy Now
+                      </button>
                       <button
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
                           addToCart(product);
                         }}
-                        className="flex-1 bg-white text-black font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-red-600 hover:text-white transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(207,15,71,0.4)]"
+                        className="p-4 rounded-xl border border-white/10 text-white hover:bg-white hover:text-black transition-all duration-300"
+                        title="Add to Cart"
                       >
-                        Add to Cart <FaArrowRight />
+                         <FaShoppingBag />
                       </button>
                       <button
                         onClick={(e) => {
