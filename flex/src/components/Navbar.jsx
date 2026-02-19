@@ -12,10 +12,10 @@ import { ShoppingBag, Shield } from "lucide-react";
 gsap.registerPlugin(useGSAP);
 
 const navLinks = [
-  { label: "Contact", href: "/contact" },
-  { label: "Products", href: "/products" },
-  { label: "About", href: "/about" },
   { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Products", href: "/products" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export default function Navbar() {
@@ -40,34 +40,36 @@ export default function Navbar() {
       gsap.set(itemsRef.current, {
         opacity: 0,
         x: 0,
-        y: 30,
+        y: 0,
         scale: 0.8,
+        xPercent: -50,
+        yPercent: -50,
       });
     },
-    { scope: menuRef }
+    { scope: menuRef },
   );
 
   const handleEnter = useCallback(() => {
     // Enlarge icon
     gsap.to(iconRef.current, { scale: 1.5, duration: 0.3, ease: "power3.out" });
 
-    const radius = 140;
+    const radius = 110;
     const total = navLinks.length;
 
     gsap.killTweensOf(itemsRef.current);
 
-    // Spread links over a larger arc to prevent overlap
-    const arcSpread = Math.PI * 0.5; // Tighter arc (approx 90 deg) for better centering
-    const startAngle = Math.PI / 2 - arcSpread / 2;
+    // Create a wider horizontal arc to prevent overlap
+    const arcSpread = Math.PI * 0.85; // 153 degrees - wider arc
+    const startAngle = Math.PI / 2 + arcSpread / 2; // Start from upper left
 
     itemsRef.current.forEach((el, index) => {
-      const angle = startAngle + (index / (total - 1)) * arcSpread;
+      const angle = startAngle - (index / (total - 1)) * arcSpread;
       const x = Math.cos(angle) * radius;
       const y = Math.sin(angle) * radius;
 
       gsap.to(el, {
-        x,
-        y,
+        x: x,
+        y: y,
         opacity: 1,
         scale: 1,
         duration: 0.5,
@@ -84,7 +86,7 @@ export default function Navbar() {
     gsap.killTweensOf(itemsRef.current);
     gsap.to(itemsRef.current, {
       x: 0,
-      y: 30,
+      y: 0,
       opacity: 0,
       scale: 0.8,
       duration: 0.4,
@@ -125,7 +127,7 @@ export default function Navbar() {
           {/* Icon */}
           <div
             ref={iconRef}
-            className="cursor-pointer z-10 will-change-transform"
+            className="cursor-pointer z-10 will-change-transform ml-5"
             role="button"
             aria-label="Navigation menu"
             tabIndex={0}
@@ -139,16 +141,17 @@ export default function Navbar() {
           </div>
 
           {/* Arc Links */}
-          <ul className="absolute list-none p-0 m-0">
+          <ul className="absolute list-none p-0 m-0 pointer-events-none">
             {navLinks.map((link, index) => (
               <li
                 key={link.label}
                 ref={(el) => (itemsRef.current[index] = el)}
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 will-change-transform"
+                className="absolute left-0 top-0 will-change-transform"
+                style={{ transformOrigin: "center center" }}
               >
                 <Link
                   href={link.href}
-                  className="px-4 py-2 bg-white shadow-lg rounded-full text-sm text-black font-medium hover:bg-secondary hover:text-white hover:scale-110 hover:shadow-[0_0_20px_rgba(255,11,85,0.4)] transition-all duration-200 inline-block"
+                  className="px-4 py-2 bg-white shadow-lg rounded-full text-sm text-black font-medium hover:bg-secondary hover:text-white hover:scale-110 hover:shadow-[0_0_20px_rgba(255,11,85,0.4)] transition-all duration-200 inline-block whitespace-nowrap pointer-events-auto"
                 >
                   {link.label}
                 </Link>
@@ -160,12 +163,15 @@ export default function Navbar() {
         {/* CTA & Mobile Toggle */}
         <div className="flex items-center gap-4 z-50 relative">
           {/* Cart Icon */}
-           {userData?.role !== "admin" && (
+          {userData?.role !== "admin" && (
             <Link href="/dashboard/cart" className="relative group">
-              <ShoppingBag size={22} className="text-white group-hover:text-secondary transition-colors duration-200" />
+              <ShoppingBag
+                size={22}
+                className="text-white group-hover:text-secondary transition-colors duration-200"
+              />
               {cartCount > 0 && (
                 <span className="absolute -top-2 -right-2.5 bg-secondary text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-[0_0_10px_rgba(255,11,85,0.5)] animate-in zoom-in duration-300">
-                  {cartCount > 9 ? '9+' : cartCount}
+                  {cartCount > 9 ? "9+" : cartCount}
                 </span>
               )}
             </Link>
@@ -174,7 +180,10 @@ export default function Navbar() {
           {/* Admin Panel Icon */}
           {userData?.role === "admin" && (
             <Link href="/admin" className="relative group" title="Admin Panel">
-              <Shield size={22} className="text-amber-400 group-hover:text-amber-300 transition-colors duration-200" />
+              <Shield
+                size={22}
+                className="text-amber-400 group-hover:text-amber-300 transition-colors duration-200"
+              />
             </Link>
           )}
 
@@ -203,9 +212,13 @@ export default function Navbar() {
                   </p>
                 </div>
                 {user.photoURL && (
-                  <Link href={userData?.role === "admin" ? "/admin" : "/dashboard"}>
+                  <Link
+                    href={userData?.role === "admin" ? "/admin" : "/dashboard"}
+                  >
                     <div className="avatar">
-                      <div className={`w-10 rounded-full ring ring-offset-base-100 ring-offset-2 ${userData?.role === "admin" ? "ring-amber-400" : "ring-secondary"}`}>
+                      <div
+                        className={`w-10 rounded-full ring ring-offset-base-100 ring-offset-2 ${userData?.role === "admin" ? "ring-amber-400" : "ring-secondary"}`}
+                      >
                         <img src={user.photoURL} alt="avatar" />
                       </div>
                     </div>
@@ -222,15 +235,19 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <button 
+          <button
             className="md:hidden text-white p-2"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
-            {mobileMenuOpen ? <BsXDiamond size={24} /> : <div className="space-y-1.5">
-              <span className="block w-6 h-0.5 bg-white"></span>
-              <span className="block w-6 h-0.5 bg-white"></span>
-              <span className="block w-4 h-0.5 bg-white ml-auto"></span>
-            </div>}
+            {mobileMenuOpen ? (
+              <BsXDiamond size={24} />
+            ) : (
+              <div className="space-y-1.5">
+                <span className="block w-6 h-0.5 bg-white"></span>
+                <span className="block w-6 h-0.5 bg-white"></span>
+                <span className="block w-4 h-0.5 bg-white ml-auto"></span>
+              </div>
+            )}
           </button>
         </div>
 
@@ -239,7 +256,7 @@ export default function Navbar() {
           <div className="fixed inset-0 bg-black/95 backdrop-blur-xl z-40 flex flex-col items-center justify-center animate-in fade-in duration-200 md:hidden">
             <nav className="flex flex-col items-center gap-8 text-center">
               {navLinks.map((link) => (
-                <Link 
+                <Link
                   key={link.label}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
@@ -251,13 +268,39 @@ export default function Navbar() {
               <div className="h-px w-10 bg-white/10 my-4" />
               {!user ? (
                 <div className="flex flex-col gap-4">
-                  <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="text-xl text-white">Log In</Link>
-                  <Link href="/register" onClick={() => setMobileMenuOpen(false)} className="text-xl text-secondary font-bold">Register</Link>
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-xl text-white"
+                  >
+                    Log In
+                  </Link>
+                  <Link
+                    href="/register"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-xl text-secondary font-bold"
+                  >
+                    Register
+                  </Link>
                 </div>
               ) : (
                 <div className="flex flex-col gap-4">
-                   <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="text-xl text-white">Dashboard</Link>
-                   <button onClick={() => { logout(); setMobileMenuOpen(false); }} className="text-xl text-red-500">Logout</button>
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-xl text-white"
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="text-xl text-red-500"
+                  >
+                    Logout
+                  </button>
                 </div>
               )}
             </nav>
