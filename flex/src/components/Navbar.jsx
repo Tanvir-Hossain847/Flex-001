@@ -12,10 +12,10 @@ import { ShoppingBag, Shield } from "lucide-react";
 gsap.registerPlugin(useGSAP);
 
 const navLinks = [
-  { label: "Products", href: "/products" },
-  { label: "Support", href: "/support" },
-  { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
+  { label: "Products", href: "/products" },
+  { label: "About", href: "/about" },
+  { label: "Home", href: "/" },
 ];
 
 export default function Navbar() {
@@ -51,13 +51,13 @@ export default function Navbar() {
     // Enlarge icon
     gsap.to(iconRef.current, { scale: 1.5, duration: 0.3, ease: "power3.out" });
 
-    const radius = 90;
+    const radius = 140;
     const total = navLinks.length;
 
     gsap.killTweensOf(itemsRef.current);
 
     // Spread links over a larger arc to prevent overlap
-    const arcSpread = Math.PI / 1; // wider arc for 4 items
+    const arcSpread = Math.PI * 0.5; // Tighter arc (approx 90 deg) for better centering
     const startAngle = Math.PI / 2 - arcSpread / 2;
 
     itemsRef.current.forEach((el, index) => {
