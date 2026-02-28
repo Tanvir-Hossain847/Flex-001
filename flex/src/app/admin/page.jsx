@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "@/lib/axios";
 import { Users, Package, Image as ImageIcon, TrendingUp } from "lucide-react";
 
 export default function AdminOverview() {
@@ -11,9 +11,9 @@ export default function AdminOverview() {
     const fetchStats = async () => {
       try {
         const [usersRes, productsRes, thermosRes] = await Promise.all([
-          axios.get("http://localhost:4000/users"),
-          axios.get("http://localhost:4000/products"),
-          axios.get("http://localhost:4000/thermos"),
+          axios.get("/users"),
+          axios.get("/products"),
+          axios.get("/thermos"),
         ]);
         setStats({
           users: Array.isArray(usersRes.data) ? usersRes.data.length : 0,

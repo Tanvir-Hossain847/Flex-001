@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "@/lib/axios";
 import { Package, Truck, CheckCircle, Clock } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
@@ -20,7 +20,7 @@ export default function UserOrdersPage() {
   const fetchOrders = async () => {
     try {
       // Filter by email using json-server query filtering
-      const response = await axios.get(`http://localhost:4000/orders?email=${user.email}`);
+      const response = await axios.get(`/orders?email=${user.email}`);
       const sorted = Array.isArray(response.data)
         ? response.data.sort((a, b) => new Date(b.orderDate || 0) - new Date(a.orderDate || 0))
         : [];

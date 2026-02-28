@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { CreditCard, Plus, History, Truck, CheckCircle } from "lucide-react";
-import axios from "axios";
+import axios from "@/lib/axios";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 
@@ -18,7 +18,7 @@ export default function PaymentsPage() {
 
   const fetchPaymentHistory = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/orders/${user.email}`);
+      const response = await axios.get(`/orders/${user.email}`);
       // Sort by newest first
       const sorted = Array.isArray(response.data) 
         ? response.data.sort((a, b) => new Date(b.orderDate || 0) - new Date(a.orderDate || 0))

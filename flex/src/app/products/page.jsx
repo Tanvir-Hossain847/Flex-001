@@ -1,15 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaArrowRight, FaImage, FaSpinner, FaHeart, FaRegHeart, FaShoppingBag } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
-import { useProducts } from "@/context/ProductContext";
+import axios from "@/lib/axios";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 
 export default function ProductsPage() {
-  const { products: productList, loading, error } = useProducts();
+  const [productList, setProductList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get("/products");
+      setProductList(response.data);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching products:", err);
+      setError("Failed to load products. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
   const { addToCart } = useCart();
   const { addToWishlist, isWishlisted } = useWishlist();
   const [filter, setFilter] = useState("All");

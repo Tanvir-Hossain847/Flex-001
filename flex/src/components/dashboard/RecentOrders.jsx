@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Clock, Package, Truck, CheckCircle, AlertCircle } from "lucide-react";
-import axios from "axios";
+import axios from "@/lib/axios";
 import { useAuth } from "@/context/AuthContext";
 
 export default function RecentOrders() {
@@ -18,7 +18,7 @@ export default function RecentOrders() {
 
   const fetchRecentOrders = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/orders?email=${user.email}`);
+      const response = await axios.get(`/orders?email=${user.email}`);
       // Sort by newest first and take top 5
       const sorted = Array.isArray(response.data) 
         ? response.data

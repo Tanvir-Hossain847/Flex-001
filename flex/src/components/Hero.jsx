@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import axios from "@/lib/axios";
 import Image from "next/image";
 
 const colorMap = {
@@ -28,14 +29,14 @@ export default function Hero() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:4000/thermos");
-        const data = await response.json();
+        const response = await axios.get("/thermos");
+        const data = response.data;
 
-        const formattedData = data.map((item) => ({
+        const formattedData = (data || []).map((item) => ({
           ...item,
           color: colorMap[item.color] || "#000000",
           text: item.description,
-          highlight: item.highlight.join(" • "),
+          highlight: (item.highlight || []).join(" • "),
         }));
 
         setThermos(formattedData);

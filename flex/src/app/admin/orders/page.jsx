@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "@/lib/axios";
 import { Package, CheckCircle, Clock, Truck, Search, Eye } from "lucide-react";
 import { toast } from "sonner";
 
-const ORDERS_API = "http://localhost:4000/orders";
+const ORDERS_API = "/orders";
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState([]);
