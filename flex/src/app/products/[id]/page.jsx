@@ -1,22 +1,42 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaArrowLeft, FaArrowRight, FaSpinner, FaImage, FaHeart, FaRegHeart } from "react-icons/fa";
 import Link from "next/link";
 import Image from "next/image";
-import { useProducts } from "@/context/ProductContext";
+import axios from "@/lib/axios";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 
 export default function ProductDetailsPage() {
   const { id } = useParams();
-  const { products, loading, error } = useProducts();
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (!id) return;
+      setLoading(true);
+      try {
+        const response = await axios.get(`/products/${id}`);
+        setProduct(response.data);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching product details:", err);
+        setError("Product not found or failed to load.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
+
   const { addToCart } = useCart();
   const { addToWishlist, isWishlisted } = useWishlist();
   const [quantity, setQuantity] = useState(1);
-
-  const product = products.find((p) => p._id === id);
 
   // Map backend color names to hex codes for the glow effect
   const colorMap = {

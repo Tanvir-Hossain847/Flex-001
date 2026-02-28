@@ -4,7 +4,7 @@ import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import axios from "axios";
+import axios from "@/lib/axios";
 import { ShieldCheck, MapPin, Truck, CreditCard, ArrowRight } from "lucide-react";
 
 export default function CheckoutPage() {
@@ -64,7 +64,7 @@ export default function CheckoutPage() {
 
     try {
       // API call to save order
-      await axios.post(`http://localhost:4000/orders`, orderData);
+      await axios.post(`/orders`, orderData);
       
       // Clear Cart
       await clearCart();

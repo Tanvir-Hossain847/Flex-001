@@ -11,25 +11,12 @@ import {
   ShieldCheck
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
-import { useProducts } from "@/context/ProductContext";
 
 export default function CartPage() {
   const { cartItems, loading, removeFromCart, updateQuantity } = useCart();
-  const { products } = useProducts();
 
-  // Enrich cart items with full product details from the products API
-  const cart = cartItems.map((item) => {
-    const productData = products.find((p) => p._id === item.productId);
-    return {
-      ...item,
-      name: productData?.name || item.name,
-      image: productData?.image || item.image,
-      color: productData?.color || item.color,
-      price: productData?.price || item.price || 45,
-      description: productData?.description || "",
-      tagline: productData?.tagline || "",
-    };
-  });
+  // Use cartItems directly as they already contain the necessary product details
+  const cart = cartItems;
 
   const subtotal = cart.reduce((acc, item) => acc + ((item.price || 45) * (item.quantity || 1)), 0);
   const tax = subtotal * 0.08;

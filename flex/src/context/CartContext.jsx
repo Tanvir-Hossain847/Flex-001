@@ -1,13 +1,13 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import axios from "@/lib/axios";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 
 const CartContext = createContext();
 
-const API_URL = "http://localhost:4000/cart";
+const API_URL = "/cart";
 
 export const CartProvider = ({ children }) => {
   const { user } = useAuth();

@@ -28,7 +28,7 @@ export default function FeatureGrid() {
       y: 20,
       duration: 0.8,
       ease: "power3.out",
-      stagger: 0.15,
+      
     });
 
     // Animate images

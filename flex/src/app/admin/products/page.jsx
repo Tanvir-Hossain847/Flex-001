@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "@/lib/axios";
 import Image from "next/image";
 import {
   Package,
@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-const PRODUCTS_API = "http://localhost:4000/products";
+const PRODUCTS_API = "/products";
 
 export default function ProductManagement() {
   const [products, setProducts] = useState([]);

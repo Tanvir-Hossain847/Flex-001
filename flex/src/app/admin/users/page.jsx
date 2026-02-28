@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "@/lib/axios";
 import { Users, Search, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 
-const USERS_API = "http://localhost:4000/users";
+const USERS_API = "/users";
 const ROLES = ["user", "admin", "moderator"];
 
 export default function UserManagement() {

@@ -10,11 +10,11 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth, googleProvider } from "../lib/firebase";
-import axios from "axios";
+import axios from "../lib/axios";
 
 const AuthContext = createContext();
 
-const USERS_API = "http://localhost:4000/users";
+const USERS_API = "/users";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);

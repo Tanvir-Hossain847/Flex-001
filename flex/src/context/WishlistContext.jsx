@@ -1,13 +1,13 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import axios from "@/lib/axios";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 
 const WishlistContext = createContext();
 
-const API_URL = "http://localhost:4000/wishlist";
+const API_URL = "/wishlist";
 
 export const WishlistProvider = ({ children }) => {
   const { user } = useAuth();
@@ -22,7 +22,7 @@ export const WishlistProvider = ({ children }) => {
     }
     setLoading(true);
     try {
-      // User requested to use http://localhost:4000/wishlist/:id (using user.email as id)
+      // User requested to use https://flex-001-server-side.vercel.app/wishlist/:id (using user.email as id)
       const response = await axios.get(`${API_URL}/${user.email}`);
       setWishlistItems(Array.isArray(response.data) ? response.data : []);
     } catch (err) {

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import axios from "axios";
+import axios from "@/lib/axios";
 import { ShoppingBag, ArrowRight } from "lucide-react";
 
 const OurProducts = () => {
@@ -14,7 +14,7 @@ const OurProducts = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/products");
+        const response = await axios.get("/products");
         // Assuming response.data is the array or response.data.products
         const data = Array.isArray(response.data) ? response.data : response.data.products || [];
         setProducts(data.slice(0, 4));

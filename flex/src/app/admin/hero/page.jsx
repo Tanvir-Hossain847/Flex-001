@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "@/lib/axios";
 import Image from "next/image";
 import { Image as ImageIcon, Save, X, Edit3, GripVertical } from "lucide-react";
 import { toast } from "sonner";
 
-const THERMOS_API = "http://localhost:4000/thermos";
+const THERMOS_API = "/thermos";
 
 const COLOR_OPTIONS = [
   { label: "Obsidian", value: "OBSIDIAN" },
